@@ -1,1 +1,31 @@
 //doto: Complete missing code..
+
+<div class="container mt-4 d-flex justify-content-center">
+  <div class="card p-4 shadow" style="width: 420px;">
+    <h4 class="fw-bold">Add New Cargo</h4>
+
+    <form [formGroup]="itemForm" (ngSubmit)="submit()">
+      <div class="mb-3">
+        <label class="form-label">Content</label>
+        <input type="text" class="form-control"
+               formControlName="content" placeholder="Cargo content" />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Size</label>
+        <select class="form-select" formControlName="size">
+          <option value="">Select size</option>
+          <option value="SMALL">Small</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="LARGE">Large</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Status</label>
+        <input type="text" class="form-control"
+               formControlName="status" placeholder="e.g. PENDING" />
+      </div>
+      <button type="submit" class="btn btn-dark w-100"
+              [disabled]="itemForm.invalid">Add Cargo</button>
+    </form>
+  </div>
+</div>

@@ -2,4 +2,26 @@
      File: src/app/assgin-cargo/assgin-cargo.component.html
      ======================================================= -->
 
-<p>Assign Cargo</p>
+<!-- <p>Assign Cargo</p> -->
+
+<div class="container mt-4 d-flex justify-content-center">
+  <div class="card p-4 shadow" style="width: 420px;">
+    <h4 class="fw-bold">Assign Cargo to Driver</h4>
+
+    <div class="mb-3">
+      <label class="form-label">Cargo ID</label>
+      <input type="number" class="form-control"
+             [(ngModel)]="cargoId" placeholder="Enter Cargo ID" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Driver ID</label>
+      <input type="number" class="form-control"
+             [(ngModel)]="driverId" placeholder="Enter Driver ID" />
+    </div>
+    <button class="btn btn-dark w-100" (click)="assign(driverId, cargoId)">
+      Assign
+    </button>
+
+    <div *ngIf="message" class="alert alert-success mt-3">{{ message }}</div>
+  </div>
+</div>

@@ -1,8 +1,6 @@
 package com.edutech.logisticsmanagementandtrackingsystem.service;
 
-/* =========================================================
-   File: CargoService.java  (FINAL – TEST COMPLIANT)
-   ========================================================= */
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,10 +44,10 @@ public class CargoService {
                 .orElseThrow(() -> new RuntimeException("Cargo not found"));
 
         cargo.setStatus(newStatus);
-        return cargoRepository.save(cargo);   // ✅ REQUIRED for testUpdateCargoStatus
+        return cargoRepository.save(cargo);   
     }
 
-    /* ✅ ASSIGN CARGO TO DRIVER (BUSINESS) */
+   
     public Cargo assignCargoToDriver(Long cargoId, Long driverId) {
 
         Cargo cargo = cargoRepository.findById(cargoId)
@@ -64,7 +62,7 @@ public class CargoService {
         return cargoRepository.saveAndFlush(cargo); // ✅ ensures DB sync for tests
     }
 
-    /* ✅ GET CARGO BY ID (CUSTOMER – STATUS) */
+    
     public Cargo getCargoById(Long cargoId) {
         return cargoRepository.findById(cargoId)
                 .orElseThrow(() -> new RuntimeException("Cargo not found"));

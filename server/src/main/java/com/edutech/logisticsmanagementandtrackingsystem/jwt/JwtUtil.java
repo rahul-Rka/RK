@@ -1,5 +1,5 @@
-package com.edutech.logisticsmanagementandtrackingsystem.jwt;
 
+package com.edutech.logisticsmanagementandtrackingsystem.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -15,11 +15,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-
-
-/* =========================================================
-   File: src/main/java/.../jwt/JwtUtil.java
-   ========================================================= */
 import io.jsonwebtoken.*;
 import java.util.Date;
 import org.springframework.stereotype.Component;
@@ -27,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtUtil {
 
-    private final String SECRET = "logistics_secret";
+    private final String SECRET = "logistics_secret_key_that_is_long_enough_for_hs256_algorithm_ok";
 
     public String generateToken(String username, String role) {
         return Jwts.builder()
@@ -35,13 +30,13 @@ public class JwtUtil {
                 .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 86400000))
-                .signWith(SignatureAlgorithm.HS512, SECRET)
+                .signWith(SignatureAlgorithm.HS256, SECRET.getBytes()) // ← getBytes(), HS256
                 .compact();
     }
 
     public String extractUsername(String token) {
         return Jwts.parser()
-                .setSigningKey(SECRET)
+                .setSigningKey(SECRET.getBytes()) // ← getBytes()
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();

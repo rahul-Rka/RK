@@ -1,10 +1,60 @@
-<!-- =======================================================
-     File: src/app/registration/registration.component.html
-     ======================================================= -->
+<nav class="navbar navbar-dark bg-dark px-3">
+  <span class="navbar-brand">LGM</span>
+  <span class="navbar-text text-white">Register</span>
+</nav>
 
-<form [formGroup]="itemForm">
-  <input type="text" formControlName="username" placeholder="Username">
-  <input type="password" formControlName="password" placeholder="Password">
-  <input type="email" formControlName="email" placeholder="Email">
-  <input type="text" formControlName="role" placeholder="Role">
-</form>
+<div class="container d-flex justify-content-center mt-5">
+  <div class="card p-4 shadow" style="width: 420px;">
+    <h4 class="text-center fw-bold">LOGISTIC MANAGEMENT SYSTEM</h4>
+    <p class="text-center text-muted">Please enter your details here</p>
+
+    <form [formGroup]="itemForm" (ngSubmit)="register()">
+
+      <div class="mb-3">
+        <label class="form-label">Username</label>
+        <input type="text"
+               class="form-control"
+               formControlName="username"
+               placeholder="Username" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password"
+               class="form-control"
+               formControlName="password"
+               placeholder="Password" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email"
+               class="form-control"
+               formControlName="email"
+               placeholder="Email" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Role</label>
+        <select class="form-select" formControlName="role">
+          <option value="">-- Select Role --</option>
+          <option value="BUSINESS">Business</option>
+          <option value="DRIVER">Driver</option>
+          <option value="CUSTOMER">Customer</option>
+        </select>
+      </div>
+
+      <button type="submit"
+              class="btn btn-dark w-100"
+              [disabled]="itemForm.invalid">
+        Register
+      </button>
+
+      <p class="text-center mt-3">
+        Already have an account?
+        <a routerLink="/login"><strong>Login</strong></a>
+      </p>
+
+    </form>
+  </div>
+</div>

@@ -5,9 +5,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
-/* =========================================================
-   File: src/main/java/.../dto/LoginRequest.java
-   ========================================================= */
 public class LoginRequest {
 
     private String username;

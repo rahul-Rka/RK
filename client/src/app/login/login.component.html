@@ -1,8 +1,42 @@
-<!-- =======================================================
-     File: src/app/login/login.component.html
-     ======================================================= -->
 
-<form [formGroup]="itemForm">
-  <input type="text" formControlName="username" placeholder="Username">
-  <input type="password" formControlName="password" placeholder="Password">
-</form>
+
+<nav class="navbar navbar-dark bg-dark px-3">
+  <span class="navbar-brand">LGM</span>
+  <span class="navbar-text text-white">Login</span>
+</nav>
+
+<div class="container d-flex justify-content-center mt-5">
+  <div class="card p-4 shadow" style="width: 420px;">
+    <h4 class="text-center fw-bold">LOGISTIC MANAGEMENT SYSTEM</h4>
+    <p class="text-center text-muted">Please enter your user and password!</p>
+
+    <form [formGroup]="itemForm" (ngSubmit)="login()">
+      <div class="mb-3">
+        <label class="form-label">Username</label>
+        <input type="text"
+               class="form-control"
+               formControlName="username"
+               placeholder="name@example.com" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password"
+               class="form-control"
+               formControlName="password"
+               placeholder="Password" />
+      </div>
+
+      <button type="submit"
+              class="btn btn-outline-dark w-100"
+              [disabled]="itemForm.invalid">
+        Login
+      </button>
+
+      <p class="text-center mt-3">
+        Don't have an account?
+        <a routerLink="/register"><strong>Registration</strong></a>
+      </p>
+    </form>
+  </div>
+</div>

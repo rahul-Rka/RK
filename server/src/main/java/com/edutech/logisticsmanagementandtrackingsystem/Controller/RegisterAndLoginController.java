@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.edutech.logisticsmanagementandtrackingsystem.entity.*;
+import com.edutech.logisticsmanagementandtrackingsystem.jwt.JwtUtil;
 import com.edutech.logisticsmanagementandtrackingsystem.repository.*;
 import com.edutech.logisticsmanagementandtrackingsystem.service.UserService;
 
@@ -27,6 +28,8 @@ public class RegisterAndLoginController {
 
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private JwtUtil jwtUtil;
 
     // ✅ REGISTER
     @PostMapping("/register")
@@ -54,21 +57,19 @@ public class RegisterAndLoginController {
         return customerRepository.save(c);
     }
 
-    // ✅ LOGIN
-    @PostMapping("/login")
-    public Map<String, Object> login(@RequestBody Map<String, String> req) {
-
-        User user = userService.findByUsername(req.get("username"));
-
-        if (user == null || !user.getPassword().equals(req.get("password"))) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid Credentials");
-        }
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("token", "dummy-token");
-        response.put("username", user.getUsername());
-        response.put("email", user.getEmail());
-        response.put("role", user.getRole());
-        return response;
+@PostMapping("/login")
+public Map<String, Object> login(@RequestBody Map<String, String> req) {
+    User user = userService.findByUsername(req.get("username"));
+    if (user == null || !user.getPassword().equals(req.get("password"))) {
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid Credentials");
     }
+    String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
+    Map<String, Object> response = new HashMap<>();
+    response.put("token", token);          // ← real JWT now
+    response.put("username", user.getUsername());
+    response.put("email", user.getEmail());
+    response.put("role", user.getRole());
+    return response;
+}
+
 }

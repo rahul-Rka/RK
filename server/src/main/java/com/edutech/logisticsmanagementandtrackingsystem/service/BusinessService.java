@@ -1,8 +1,6 @@
 package com.edutech.logisticsmanagementandtrackingsystem.service;
 
-/* =========================================================
-   File: BusinessService.java
-   ========================================================= */
+
 
 import org.springframework.stereotype.Service;
 

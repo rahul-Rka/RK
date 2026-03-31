@@ -1,3 +1,109 @@
-<div class="row text-center">
+<!-- <div class="row text-center">
 <h1 class="text-capitalize">Welcome to Logistic Management System</h1>
+</div> -->
+
+
+<div class="container mt-4">
+
+  <!-- ===== BUSINESS DASHBOARD ===== -->
+  <ng-container *ngIf="role === 'BUSINESS'">
+    <h2 class="mb-4">Business Dashboard</h2>
+
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <div class="card text-white bg-primary p-3 text-center">
+          <h5>Total Cargo</h5>
+          <h2>{{ cargos.length }}</h2>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card text-white bg-success p-3 text-center">
+          <h5>Total Drivers</h5>
+          <h2>{{ drivers.length }}</h2>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card text-white bg-warning p-3 text-center">
+          <h5>Quick Actions</h5>
+          <a routerLink="/addcargo" class="btn btn-light btn-sm mt-1">Add Cargo</a>
+          <a routerLink="/asgin-cargo" class="btn btn-light btn-sm mt-1">Assign Cargo</a>
+        </div>
+      </div>
+    </div>
+
+    <h4>All Cargo</h4>
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th><th>Content</th><th>Size</th><th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of cargos">
+          <td>{{ c.id }}</td>
+          <td>{{ c.content }}</td>
+          <td>{{ c.size }}</td>
+          <td><span class="badge bg-info">{{ c.status }}</span></td>
+        </tr>
+        <tr *ngIf="cargos.length === 0">
+          <td colspan="4" class="text-center">No cargo found</td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+
+  <!-- ===== DRIVER DASHBOARD ===== -->
+  <ng-container *ngIf="role === 'DRIVER'">
+    <h2 class="mb-4">Driver Dashboard</h2>
+
+    <div class="card p-3 mb-4 bg-light">
+      <h5>Your Assigned Cargo</h5>
+    </div>
+
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th><th>Content</th><th>Size</th><th>Status</th><th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of assignedCargos">
+          <td>{{ c.id }}</td>
+          <td>{{ c.content }}</td>
+          <td>{{ c.size }}</td>
+          <td><span class="badge bg-warning text-dark">{{ c.status }}</span></td>
+          <td>
+            <a routerLink="/viewcargostatus" class="btn btn-sm btn-primary">Update Status</a>
+          </td>
+        </tr>
+        <tr *ngIf="assignedCargos.length === 0">
+          <td colspan="5" class="text-center">No assigned cargo</td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+
+  <!-- ===== CUSTOMER DASHBOARD ===== -->
+  <ng-container *ngIf="role === 'CUSTOMER'">
+    <h2 class="mb-4">Customer Dashboard</h2>
+
+    <div class="card p-4 shadow" style="max-width: 500px; margin: auto;">
+      <h5>Track Your Cargo</h5>
+      <div class="input-group mt-3">
+        <input type="number"
+               class="form-control"
+               placeholder="Enter Cargo ID"
+               [(ngModel)]="cargoIdInput" />
+        <button class="btn btn-dark" (click)="viewCargoStatus()">Track</button>
+      </div>
+
+      <div *ngIf="cargoStatus" class="mt-4">
+        <div class="alert alert-info">
+          <strong>Cargo ID:</strong> {{ cargoStatus.cargoId }}<br/>
+          <strong>Status:</strong> {{ cargoStatus.status }}
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
 </div>

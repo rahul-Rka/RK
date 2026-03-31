@@ -1,8 +1,5 @@
 package com.edutech.logisticsmanagementandtrackingsystem.service;
 
-/* =========================================================
-   File: DriverService.java
-   ========================================================= */
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,5 +1,26 @@
-<!-- =======================================================
-     File: src/app/viewcargostatus/viewcargostatus.component.html
-     ======================================================= -->
 
-<p></p>
+ <div class="container mt-4 d-flex justify-content-center">
+  <div class="card p-4 shadow" style="width: 420px;">
+    <h4 class="fw-bold">Update Cargo Status</h4>
+
+    <div class="mb-3">
+      <label class="form-label">Cargo ID</label>
+      <input type="number" class="form-control"
+             [(ngModel)]="cargoId" placeholder="Enter Cargo ID" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">New Status</label>
+      <select class="form-select" [(ngModel)]="newStatus">
+        <option value="">Select status</option>
+        <option value="PICKED_UP">Picked Up</option>
+        <option value="IN_TRANSIT">In Transit</option>
+        <option value="DELIVERED">Delivered</option>
+      </select>
+    </div>
+    <button class="btn btn-dark w-100" (click)="updateStatus()">
+      Update Status
+    </button>
+
+    <div *ngIf="message" class="alert alert-success mt-3">{{ message }}</div>
+  </div>
+</div>
