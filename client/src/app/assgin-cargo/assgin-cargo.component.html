@@ -1,27 +1,73 @@
-<!-- =======================================================
-     File: src/app/assgin-cargo/assgin-cargo.component.html
-     ======================================================= -->
-
-<!-- <p>Assign Cargo</p> -->
-
-<div class="container mt-4 d-flex justify-content-center">
-  <div class="card p-4 shadow" style="width: 420px;">
-    <h4 class="fw-bold">Assign Cargo to Driver</h4>
-
-    <div class="mb-3">
-      <label class="form-label">Cargo ID</label>
-      <input type="number" class="form-control"
-             [(ngModel)]="cargoId" placeholder="Enter Cargo ID" />
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Driver ID</label>
-      <input type="number" class="form-control"
-             [(ngModel)]="driverId" placeholder="Enter Driver ID" />
-    </div>
-    <button class="btn btn-dark w-100" (click)="assign(driverId, cargoId)">
-      Assign
-    </button>
-
-    <div *ngIf="message" class="alert alert-success mt-3">{{ message }}</div>
+<div class="container mt-4" style="max-width: 700px;">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Cargo Assignment</h2>
+    <button class="btn btn-outline-secondary" (click)="goBack()">← Back</button>
   </div>
+
+  <!-- BUSINESS: assign cargo to a driver -->
+  <ng-container *ngIf="role === 'BUSINESS'">
+    <div class="card p-4 shadow">
+
+      <div class="mb-3">
+        <label class="form-label">Select Cargo</label>
+        <select class="form-select" [(ngModel)]="selectedCargoId">
+          <option [value]="null">-- Select Cargo --</option>
+          <option *ngFor="let c of cargos" [value]="c.id">
+            #{{ c.id }} — {{ c.content }} ({{ c.status }})
+          </option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Select Driver</label>
+        <select class="form-select" [(ngModel)]="selectedDriverId">
+          <option [value]="null">-- Select Driver --</option>
+          <option *ngFor="let d of drivers" [value]="d.id">
+            #{{ d.id }} — {{ d.name }}
+          </option>
+        </select>
+      </div>
+
+      <button
+        class="btn btn-dark w-100"
+        (click)="assign()"
+        [disabled]="!selectedCargoId || !selectedDriverId">
+        Assign Cargo
+      </button>
+
+      <div class="mt-3" *ngIf="successMessage">
+        <div class="alert alert-success">{{ successMessage }}</div>
+      </div>
+      <div class="mt-3" *ngIf="errorMessage">
+        <div class="alert alert-danger">{{ errorMessage }}</div>
+      </div>
+
+    </div>
+  </ng-container>
+
+  <!-- DRIVER: view assigned cargo -->
+  <ng-container *ngIf="role === 'DRIVER'">
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Content</th>
+          <th>Size</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of assignedCargos">
+          <td>{{ c.id }}</td>
+          <td>{{ c.content }}</td>
+          <td>{{ c.size }}</td>
+          <td><span class="badge bg-warning text-dark">{{ c.status }}</span></td>
+        </tr>
+        <tr *ngIf="assignedCargos.length === 0">
+          <td colspan="4" class="text-center">No cargo assigned yet.</td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+
 </div>

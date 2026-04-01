@@ -1,39 +1,70 @@
-
-// import { Component } from '@angular/core';
-// import { HttpService } from '../../services/http.service';
-
-
-// @Component({
-//   selector: 'app-assgin-cargo',
-//   templateUrl: './assgin-cargo.component.html'
-// })
-// export class AssginCargoComponent {
-
-//   constructor(private service: HttpService) {}
-
-//   assign(driverId: number, cargoId: number) {
-//     this.service.assignDriver(driverId, cargoId).subscribe();
-//   }
-// }
-
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { HttpService } from '../../services/http.service';
 
 @Component({
   selector: 'app-assgin-cargo',
   templateUrl: './assgin-cargo.component.html'
 })
-export class AssginCargoComponent {
-  cargoId: number = 0;
-  driverId: number = 0;
-  message: string = '';
+export class AssginCargoComponent implements OnInit {
 
-  constructor(private service: HttpService) {}
+  cargos: any[]        = [];
+  drivers: any[]       = [];
+  assignedCargos: any[] = [];
 
-  assign(driverId: number, cargoId: number) {
-    this.service.assignDriver(driverId, cargoId).subscribe({
-      next: () => this.message = 'Cargo assigned successfully!',
-      error: () => this.message = 'Assignment failed.'
-    });
+  selectedCargoId: any  = null;
+  selectedDriverId: any = null;
+
+  successMessage = '';
+  errorMessage   = '';
+  role = '';
+
+  constructor(private service: HttpService, private router: Router) {}
+
+  ngOnInit(): void {
+    this.role = localStorage.getItem('role') || '';
+
+    if (this.role === 'BUSINESS') {
+      this.service.getCargo().subscribe({
+        next: (data: any) => this.cargos = data,
+        error: () => {}
+      });
+      this.service.getDrivers().subscribe({
+        next: (data: any) => this.drivers = data,
+        error: () => {}
+      });
+    }
+
+    if (this.role === 'DRIVER') {
+      const driverId = Number(localStorage.getItem('driverId') || 1);
+      this.service.getAssignOrders(driverId).subscribe({
+        next: (data: any) => this.assignedCargos = data,
+        error: () => {}
+      });
+    }
+  }
+
+  assign(): void {
+    if (this.selectedDriverId && this.selectedCargoId) {
+      this.service.assignDriver(
+        Number(this.selectedDriverId),
+        Number(this.selectedCargoId)
+      ).subscribe({
+        next: () => {
+          this.successMessage = 'Cargo assigned successfully!';
+          this.errorMessage   = '';
+          this.selectedCargoId  = null;
+          this.selectedDriverId = null;
+        },
+        error: () => {
+          this.errorMessage   = 'Failed to assign cargo. Please try again.';
+          this.successMessage = '';
+        }
+      });
+    }
+  }
+
+  goBack(): void {
+    this.router.navigate(['/dashboard']);
   }
 }

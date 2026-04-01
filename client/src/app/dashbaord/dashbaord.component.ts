@@ -1,14 +1,3 @@
-// import { Component } from '@angular/core';
-
-// @Component({
-//   selector: 'app-dashbaord',
-//   templateUrl: './dashbaord.component.html',
-//   styleUrls: ['./dashbaord.component.scss']
-// })
-// export class DashbaordComponent {
-
-// }
-
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { HttpService } from '../../services/http.service';
@@ -19,6 +8,7 @@ import { HttpService } from '../../services/http.service';
   styleUrls: ['./dashbaord.component.scss']
 })
 export class DashbaordComponent implements OnInit {
+
   role: string = '';
   cargos: any[] = [];
   drivers: any[] = [];
@@ -26,10 +16,15 @@ export class DashbaordComponent implements OnInit {
   cargoStatus: any = null;
   cargoIdInput: number = 0;
 
-  constructor(private authService: AuthService, private service: HttpService) {}
+  constructor(
+    private authService: AuthService,
+    private service: HttpService
+  ) {}
 
   ngOnInit(): void {
+    // ✅ FIXED (IMPORTANT)
     this.role = this.authService.getRole;
+
     if (this.role === 'BUSINESS') {
       this.loadCargos();
       this.loadDrivers();
@@ -39,19 +34,31 @@ export class DashbaordComponent implements OnInit {
   }
 
   loadCargos() {
-    this.service.getCargo().subscribe((res: any) => this.cargos = res);
+    this.service.getCargo().subscribe({
+      next: (res: any) => this.cargos = res,
+      error: (err) => console.error(err)
+    });
   }
 
   loadDrivers() {
-    this.service.getDrivers().subscribe((res: any) => this.drivers = res);
+    this.service.getDrivers().subscribe({
+      next: (res: any) => this.drivers = res,
+      error: (err) => console.error(err)
+    });
   }
 
   loadAssignedCargos() {
-    const driverId = 1; // replace with actual logged-in driver id if available
-    this.service.getAssignOrders(driverId).subscribe((res: any) => this.assignedCargos = res);
+    const driverId = 1; // replace later with actual logged user id
+    this.service.getAssignOrders(driverId).subscribe({
+      next: (res: any) => this.assignedCargos = res,
+      error: (err) => console.error(err)
+    });
   }
 
   viewCargoStatus() {
-    this.service.getOrderStatus(this.cargoIdInput).subscribe((res: any) => this.cargoStatus = res);
+    this.service.getOrderStatus(this.cargoIdInput).subscribe({
+      next: (res: any) => this.cargoStatus = res,
+      error: (err) => console.error(err)
+    });
   }
 }

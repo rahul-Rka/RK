@@ -1,11 +1,7 @@
-/* =========================================================
-   File: src/app/addcargo/addcargo.component.ts
-   ========================================================= */
-
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { HttpService } from '../../services/http.service';
-
 
 @Component({
   selector: 'app-addcargo',
@@ -14,8 +10,14 @@ import { HttpService } from '../../services/http.service';
 export class AddcargoComponent {
 
   itemForm: FormGroup;
+  successMessage = '';
+  errorMessage = '';
 
-  constructor(private fb: FormBuilder, private service: HttpService) {
+  constructor(
+    private fb: FormBuilder,
+    private service: HttpService,
+    private router: Router
+  ) {
     this.itemForm = this.fb.group({
       content: ['', Validators.required],
       size: ['', Validators.required],
@@ -23,9 +25,23 @@ export class AddcargoComponent {
     });
   }
 
-  submit() {
+  submit(): void {
     if (this.itemForm.valid) {
-      this.service.addCargo(this.itemForm.value).subscribe();
+      this.service.addCargo(this.itemForm.value).subscribe({
+        next: () => {
+          this.successMessage = 'Cargo added successfully!';
+          this.errorMessage = '';
+          this.itemForm.reset();
+        },
+        error: () => {
+          this.errorMessage = 'Failed to add cargo. Please try again.';
+          this.successMessage = '';
+        }
+      });
     }
+  }
+
+  goBack(): void {
+    this.router.navigate(['/dashboard']);
   }
 }

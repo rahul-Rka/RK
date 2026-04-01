@@ -8,47 +8,44 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.edutech.logisticsmanagementandtrackingsystem.entity.Cargo;
-import com.edutech.logisticsmanagementandtrackingsystem.repository.CargoRepository;
-import com.edutech.logisticsmanagementandtrackingsystem.service.CargoService;
+import com.edutech.logisticsmanagementandtrackingsystem.entity.Driver;
+import com.edutech.logisticsmanagementandtrackingsystem.repository.DriverRepository;
+import com.edutech.logisticsmanagementandtrackingsystem.service.BusinessService;
 
 @RestController
 @RequestMapping("/api/business")
-@PreAuthorize("hasAuthority('BUSINESS')")   // ✅ FIXED
+@PreAuthorize("hasAuthority('BUSINESS')")
 public class BusinessController {
 
     @Autowired
-    private CargoService cargoService;
+    private BusinessService businessService;
 
     @Autowired
-    private CargoRepository cargoRepository;
+    private DriverRepository driverRepository;
 
+    /* ✅ ADD CARGO */
     @PostMapping("/cargo")
-    public ResponseEntity<Cargo> addCargo(
-            @RequestBody(required = false) Cargo cargo) {
-
-        if (cargo == null) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        return ResponseEntity.ok(
-                cargoService.addCargo(cargo)
-        );
+    public ResponseEntity<Cargo> addCargo(@RequestBody Cargo cargo) {
+        return ResponseEntity.ok(businessService.addCargo(cargo));
     }
 
+    @GetMapping("/drivers")
+    public List<Driver> getAllDrivers() {
+        return driverRepository.findAll();
+    }
+
+    /* ✅ GET ALL CARGO */
     @GetMapping("/cargo")
     public ResponseEntity<List<Cargo>> getAllCargo() {
-        return ResponseEntity.ok(
-                cargoRepository.findAll()
-        );
+        return ResponseEntity.ok(businessService.getAllCargo());
     }
 
+    /* ✅ ASSIGN CARGO */
     @PostMapping("/assign-cargo")
     public ResponseEntity<Cargo> assignCargoToDriver(
-            @RequestParam(required = false) Long cargoId,
-            @RequestParam(required = false) Long driverId) {
+            @RequestParam Long cargoId,
+            @RequestParam Long driverId) {
 
-        return ResponseEntity.ok(
-                cargoService.assignCargoToDriver(cargoId, driverId)
-        );
+        return ResponseEntity.ok(businessService.assignCargoToDriver(cargoId, driverId));
     }
 }

@@ -1,31 +1,48 @@
-//doto: Complete missing code..
+<div class="container mt-4" style="max-width: 600px;">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Add New Cargo</h2>
+    <button class="btn btn-outline-secondary" (click)="goBack()">← Back</button>
+  </div>
 
-<div class="container mt-4 d-flex justify-content-center">
-  <div class="card p-4 shadow" style="width: 420px;">
-    <h4 class="fw-bold">Add New Cargo</h4>
-
+  <div class="card p-4 shadow">
     <form [formGroup]="itemForm" (ngSubmit)="submit()">
+
       <div class="mb-3">
         <label class="form-label">Content</label>
-        <input type="text" class="form-control"
-               formControlName="content" placeholder="Cargo content" />
+        <input type="text" class="form-control" formControlName="content" placeholder="e.g. Electronics, Furniture" />
       </div>
+
       <div class="mb-3">
         <label class="form-label">Size</label>
         <select class="form-select" formControlName="size">
           <option value="">Select size</option>
-          <option value="SMALL">Small</option>
-          <option value="MEDIUM">Medium</option>
-          <option value="LARGE">Large</option>
+          <option value="Small">Small</option>
+          <option value="Medium">Medium</option>
+          <option value="Large">Large</option>
         </select>
       </div>
+
       <div class="mb-3">
         <label class="form-label">Status</label>
-        <input type="text" class="form-control"
-               formControlName="status" placeholder="e.g. PENDING" />
+        <select class="form-select" formControlName="status">
+          <option value="">Select status</option>
+          <option value="PENDING">Pending</option>
+          <option value="IN_TRANSIT">In Transit</option>
+          <option value="DELIVERED">Delivered</option>
+        </select>
       </div>
-      <button type="submit" class="btn btn-dark w-100"
-              [disabled]="itemForm.invalid">Add Cargo</button>
+
+      <button type="submit" class="btn btn-dark w-100">
+        Add Cargo
+      </button>
+
+      <div class="mt-3" *ngIf="successMessage">
+        <div class="alert alert-success">{{ successMessage }}</div>
+      </div>
+      <div class="mt-3" *ngIf="errorMessage">
+        <div class="alert alert-danger">{{ errorMessage }}</div>
+      </div>
+
     </form>
   </div>
 </div>

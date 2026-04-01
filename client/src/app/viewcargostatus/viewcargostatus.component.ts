@@ -1,26 +1,62 @@
-
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { HttpService } from '../../services/http.service';
 
 @Component({
   selector: 'app-viewcargostatus',
   templateUrl: './viewcargostatus.component.html'
 })
-export class ViewcargostatusComponent {
-  cargoId: number = 0;
-  newStatus: string = '';
-  message: string = '';
+export class ViewcargostatusComponent implements OnInit {
 
-  constructor(private service: HttpService) {}
+  // Customer fields
+  cargoIdInput: number = 0;
+  cargoStatus: any     = null;
 
-  viewStatus(id: number) {
-    this.service.getOrderStatus(id).subscribe();
+  // Driver fields
+  updateCargoId: number = 0;
+  newStatus             = '';
+  successMessage        = '';
+  errorMessage          = '';
+
+  role = '';
+
+  constructor(private service: HttpService, private router: Router) {}
+
+  ngOnInit(): void {
+    this.role = localStorage.getItem('role') || '';
   }
 
-  updateStatus() {
-    this.service.updateCargoStatus(this.newStatus, this.cargoId).subscribe({
-      next: () => this.message = 'Status updated successfully!',
-      error: () => this.message = 'Update failed.'
-    });
+  viewStatus(): void {
+    if (this.cargoIdInput) {
+      this.service.getOrderStatus(this.cargoIdInput).subscribe({
+        next: (res: any) => {
+          this.cargoStatus  = res;
+          this.errorMessage = '';
+        },
+        error: () => {
+          this.errorMessage = 'Cargo not found. Please check the ID.';
+          this.cargoStatus  = null;
+        }
+      });
+    }
+  }
+
+  updateStatus(): void {
+    if (this.updateCargoId && this.newStatus) {
+      this.service.updateCargoStatus(this.newStatus, this.updateCargoId).subscribe({
+        next: () => {
+          this.successMessage = 'Status updated successfully!';
+          this.errorMessage   = '';
+        },
+        error: () => {
+          this.errorMessage   = 'Failed to update status. Please try again.';
+          this.successMessage = '';
+        }
+      });
+    }
+  }
+
+  goBack(): void {
+    this.router.navigate(['/dashboard']);
   }
 }

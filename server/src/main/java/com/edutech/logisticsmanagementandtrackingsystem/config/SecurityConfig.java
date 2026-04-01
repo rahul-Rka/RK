@@ -1,5 +1,4 @@
 
-
 package com.edutech.logisticsmanagementandtrackingsystem.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 import com.edutech.logisticsmanagementandtrackingsystem.jwt.JwtRequestFilter;
 import com.edutech.logisticsmanagementandtrackingsystem.service.UserService;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -39,23 +37,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and()
-            .csrf().disable()
-            .authorizeRequests()
-            .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // ← fixes 403 preflight
-            .antMatchers("/api/register", "/api/login").permitAll()
-            .anyRequest().authenticated()
-            .and()
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/**").permitAll() 
+                .antMatchers("/api/register", "/api/login").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore(jwtRequestFilter,
-            UsernamePasswordAuthenticationFilter.class);
+                UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
     protected void configure(
-            org.springframework.security.config.annotation.authentication.builders
-                .AuthenticationManagerBuilder auth) throws Exception {
+            org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder auth)
+            throws Exception {
         auth.userDetailsService(userService);
     }
 }

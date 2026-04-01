@@ -1,26 +1,78 @@
-
- <div class="container mt-4 d-flex justify-content-center">
-  <div class="card p-4 shadow" style="width: 420px;">
-    <h4 class="fw-bold">Update Cargo Status</h4>
-
-    <div class="mb-3">
-      <label class="form-label">Cargo ID</label>
-      <input type="number" class="form-control"
-             [(ngModel)]="cargoId" placeholder="Enter Cargo ID" />
-    </div>
-    <div class="mb-3">
-      <label class="form-label">New Status</label>
-      <select class="form-select" [(ngModel)]="newStatus">
-        <option value="">Select status</option>
-        <option value="PICKED_UP">Picked Up</option>
-        <option value="IN_TRANSIT">In Transit</option>
-        <option value="DELIVERED">Delivered</option>
-      </select>
-    </div>
-    <button class="btn btn-dark w-100" (click)="updateStatus()">
-      Update Status
-    </button>
-
-    <div *ngIf="message" class="alert alert-success mt-3">{{ message }}</div>
+<div class="container mt-4" style="max-width: 600px;">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Cargo Status</h2>
+    <button class="btn btn-outline-secondary" (click)="goBack()">← Back</button>
   </div>
+
+  <!-- CUSTOMER: track cargo -->
+  <ng-container *ngIf="role === 'CUSTOMER'">
+    <div class="card p-4 shadow">
+      <h5>Track Your Cargo</h5>
+      <div class="input-group mt-3">
+        <input
+          type="number"
+          class="form-control"
+          placeholder="Enter Cargo ID"
+          [(ngModel)]="cargoIdInput"
+        />
+        <button class="btn btn-dark" (click)="viewStatus()" [disabled]="!cargoIdInput">
+          Track
+        </button>
+      </div>
+
+      <div *ngIf="cargoStatus" class="mt-4">
+        <div class="alert alert-info">
+          <strong>Content:</strong> {{ cargoStatus.content }}<br/>
+          <strong>Size:</strong>    {{ cargoStatus.size }}<br/>
+          <strong>Status:</strong>  {{ cargoStatus.status }}
+        </div>
+      </div>
+
+      <div *ngIf="errorMessage" class="mt-3">
+        <div class="alert alert-danger">{{ errorMessage }}</div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- DRIVER: update cargo status -->
+  <ng-container *ngIf="role === 'DRIVER'">
+    <div class="card p-4 shadow">
+      <h5>Update Cargo Status</h5>
+
+      <div class="mb-3 mt-3">
+        <label class="form-label">Cargo ID</label>
+        <input
+          type="number"
+          class="form-control"
+          placeholder="Enter Cargo ID"
+          [(ngModel)]="updateCargoId"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">New Status</label>
+        <select class="form-select" [(ngModel)]="newStatus">
+          <option value="">Select status</option>
+          <option value="PENDING">Pending</option>
+          <option value="IN_TRANSIT">In Transit</option>
+          <option value="DELIVERED">Delivered</option>
+        </select>
+      </div>
+
+      <button
+        class="btn btn-dark w-100"
+        (click)="updateStatus()"
+        [disabled]="!updateCargoId || !newStatus">
+        Update Status
+      </button>
+
+      <div *ngIf="successMessage" class="mt-3">
+        <div class="alert alert-success">{{ successMessage }}</div>
+      </div>
+      <div *ngIf="errorMessage" class="mt-3">
+        <div class="alert alert-danger">{{ errorMessage }}</div>
+      </div>
+    </div>
+  </ng-container>
+
 </div>
