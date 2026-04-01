@@ -14,7 +14,7 @@ import com.edutech.logisticsmanagementandtrackingsystem.service.BusinessService;
 
 @RestController
 @RequestMapping("/api/business")
-@PreAuthorize("hasAuthority('BUSINESS')")
+// @PreAuthorize("hasAuthority('BUSINESS')")
 public class BusinessController {
 
     @Autowired

@@ -1,8 +1,8 @@
 package com.edutech.logisticsmanagementandtrackingsystem.entity;
 
-import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 
 @Entity
 public class Cargo {
@@ -13,33 +13,63 @@ public class Cargo {
 
     private String content;
     private String size;
-    private String status;
+    private String status; // PENDING, IN_TRANSIT, DELIVERED
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "business_id")
+    private Business business;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "driver_id")
     private Driver driver;
 
-    @ManyToOne
-    @JoinColumn(name = "business_id")
-    @JsonIgnore   // 🔥 IMPORTANT FIX
-    private Business business;
+    public Cargo() {}
 
-    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
 
-    public Long getId() { return id; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
+    public String getContent() {
+        return content;
+    }
 
-    public String getSize() { return size; }
-    public void setSize(String size) { this.size = size; }
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public String getSize() {
+        return size;
+    }
 
-    public Driver getDriver() { return driver; }
-    public void setDriver(Driver driver) { this.driver = driver; }
+    public void setSize(String size) {
+        this.size = size;
+    }
 
-    public Business getBusiness() { return business; }
-    public void setBusiness(Business business) { this.business = business; }
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Business getBusiness() {
+        return business;
+    }
+
+    public void setBusiness(Business business) {
+        this.business = business;
+    }
+
+    public Driver getDriver() {
+        return driver;
+    }
+
+    public void setDriver(Driver driver) {
+        this.driver = driver;
+    }
 }

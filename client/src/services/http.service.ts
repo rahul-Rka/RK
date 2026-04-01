@@ -45,12 +45,12 @@ export class HttpService {
     );
   }
 
-  getAssignOrders(driverId: number) {
-    return this.http.get(
-      `${this.serverName}/api/driver/cargo?driverId=${driverId}`,
-      this.getHeaders()
-    );
-  }
+  // getAssignOrders(driverId: number) {
+  //   return this.http.get(
+  //     `${this.serverName}/api/driver/cargo?driverId=${driverId}`,
+  //     this.getHeaders()
+  //   );
+  // }
 
   getCargo() {
     return this.http.get(
@@ -89,4 +89,12 @@ export class HttpService {
       this.getHeaders()
     );
   }
+  
+getAssignOrders() {
+  return this.http.get(
+    `${this.serverName}/api/driver/cargo`,
+    this.getHeaders()
+  );
+}
+
 }

@@ -49,7 +49,7 @@ export class DashbaordComponent implements OnInit {
 
   loadAssignedCargos() {
     const driverId = 1; // replace later with actual logged user id
-    this.service.getAssignOrders(driverId).subscribe({
+    this.service.getAssignOrders().subscribe({
       next: (res: any) => this.assignedCargos = res,
       error: (err) => console.error(err)
     });

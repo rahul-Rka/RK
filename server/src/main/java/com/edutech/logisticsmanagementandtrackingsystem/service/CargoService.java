@@ -31,12 +31,17 @@ public class CargoService {
     }
 
     /* ✅ VIEW CARGOS ASSIGNED TO DRIVER */
-    public List<Cargo> getByDriver(Long driverId) {
-        return cargoRepository.findAll()
-                .stream()
-                .filter(c -> c.getDriver() != null && c.getDriver().getId().equals(driverId))
-                .collect(java.util.stream.Collectors.toList());
+    
+public List<Cargo> getCargosForLoggedInDriver(String username) {
+
+    Driver driver = driverRepository.findByName(username);
+
+    if (driver == null) {
+        return List.of();
     }
+
+    return cargoRepository.findByDriver_Id(driver.getId());
+}
 
     /* ✅ UPDATE STATUS USING STREAM */
     public Cargo updateStatus(Long cargoId, String newStatus) {

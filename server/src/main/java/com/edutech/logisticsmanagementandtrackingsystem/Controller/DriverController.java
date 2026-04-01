@@ -12,20 +12,24 @@ import com.edutech.logisticsmanagementandtrackingsystem.service.CargoService;
 
 @RestController
 @RequestMapping("/api/driver")
-@PreAuthorize("hasAuthority('DRIVER')")   // ✅ FIXED
+// @PreAuthorize("hasAuthority('DRIVER')")   // ✅ FIXED
 public class DriverController {
 
     @Autowired
     private CargoService cargoService;
 
-    @GetMapping("/cargo")
-    public ResponseEntity<List<Cargo>> getAssignedCargos(
-            @RequestParam(required = false) Long driverId) {
+    
+@GetMapping("/cargo")
+public ResponseEntity<List<Cargo>> getAssignedCargos(
+        org.springframework.security.core.Authentication authentication) {
 
-        return ResponseEntity.ok(
-                cargoService.getByDriver(driverId)
-        );
-    }
+    String username = authentication.getName();
+
+    return ResponseEntity.ok(
+            cargoService.getCargosForLoggedInDriver(username)
+    );
+}
+
 
     @PutMapping("/update-cargo-status")
     public ResponseEntity<Cargo> updateCargoStatus(

@@ -30,18 +30,27 @@ export class AssginCargoComponent implements OnInit {
         error: () => {}
       });
       this.service.getDrivers().subscribe({
-        next: (data: any) => this.drivers = data,
-        error: () => {}
+        next: (data: any) => 
+          {
+            this.drivers = data
+            console.log(this.drivers);
+
+          }
+        
+        // error: () => {}
       });
+
+     
     }
 
-    if (this.role === 'DRIVER') {
-      const driverId = Number(localStorage.getItem('driverId') || 1);
-      this.service.getAssignOrders(driverId).subscribe({
-        next: (data: any) => this.assignedCargos = data,
-        error: () => {}
-      });
-    }
+  
+if (this.role === 'DRIVER') {
+  this.service.getAssignOrders().subscribe({
+    next: (data: any) => this.assignedCargos = data,
+    error: () => {}
+  });
+}
+
   }
 
   assign(): void {

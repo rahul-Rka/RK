@@ -11,7 +11,7 @@ import com.edutech.logisticsmanagementandtrackingsystem.service.CustomerService;
 
 @RestController
 @RequestMapping("/api/customer")
-@PreAuthorize("hasAuthority('CUSTOMER')")
+// @PreAuthorize("hasAuthority('CUSTOMER')")
 public class CustomerController {
 
     @Autowired
