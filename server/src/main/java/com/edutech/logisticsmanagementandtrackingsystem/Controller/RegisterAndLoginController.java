@@ -22,7 +22,7 @@ public class RegisterAndLoginController {
 
     @PostMapping("/register")
     public Object register(@RequestBody User user) {
-        return userService.registerUser(user);
+        return userService.register(user);
     }
 
     @PostMapping("/login")

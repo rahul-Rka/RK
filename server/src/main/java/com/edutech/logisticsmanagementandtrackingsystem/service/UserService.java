@@ -49,35 +49,59 @@ public class UserService implements UserDetailsService {
     }
 
     // ✅ REGISTER — STREAM + FUNCTION MAPPING (NO IF)
-    public Object registerUser(User user) {
+    public User registerUser(User user) {
 
-        User savedUser = register(user);
+        // String role = user.getRole();
+
+        // switch (role) {
+        // case "BUSINESS":
+        // Business b = new Business();
+        // b.setName(user.getUsername());
+        // b.setEmail(user.getEmail());
+        // businessRepository.save(b);
+        // break;
+        // case "DRIVER":
+        // Driver d = new Driver();
+        // d.setName(user.getUsername());
+        // d.setEmail(user.getEmail());
+        // driverRepository.save(d);
+        // break;
+        // case "CUSTOMER":
+        // Customer customer = new Customer();
+        // customer.setEmail(user.getEmail());
+        // customer.setName(user.getUsername());
+        // break;
+        // default:
+        // break;
+        // }
+
+        // return register(user);
 
         Map<String, Function<User, Object>> roleHandlers = Map.of(
-            "BUSINESS", u -> {
-                Business b = new Business();
-                b.setName(u.getUsername());
-                b.setEmail(u.getEmail());
-                return businessRepository.save(b);
-            },
-            "DRIVER", u -> {
-                Driver d = new Driver();
-                d.setName(u.getUsername());
-                d.setEmail(u.getEmail());
-                return driverRepository.save(d);
-            }
-        );
+                "BUSINESS", u -> {
+                    Business b = new Business();
+                    b.setName(u.getUsername());
+                    b.setEmail(u.getEmail());
+                    return businessRepository.save(b);
+                },
+                "DRIVER", u -> {
+                    Driver d = new Driver();
+                    d.setName(u.getUsername());
+                    d.setEmail(u.getEmail());
+                    return driverRepository.save(d);
+                });
 
-        return roleHandlers.entrySet().stream()
+        roleHandlers.entrySet().stream()
                 .filter(e -> e.getKey().equalsIgnoreCase(user.getRole()))
                 .findFirst()
-                .map(e -> e.getValue().apply(savedUser))
+                .map(e -> e.getValue().apply(user))
                 .orElseGet(() -> {
                     Customer c = new Customer();
-                    c.setName(savedUser.getUsername());
-                    c.setEmail(savedUser.getEmail());
+                    c.setName(user.getUsername());
+                    c.setEmail(user.getEmail());
                     return customerRepository.save(c);
                 });
+        return register(user);
     }
 
     // ✅ LOGIN — PASSWORD CHECK USING BCrypt (NO IF)
@@ -85,9 +109,7 @@ public class UserService implements UserDetailsService {
 
         User user = Optional.ofNullable(userRepository.findByUsername(req.get("username")))
                 .filter(u -> passwordEncoder.matches(req.get("password"), u.getPassword()))
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid Credentials")
-                );
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid Credentials"));
 
         String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
 
@@ -95,8 +117,7 @@ public class UserService implements UserDetailsService {
                 "token", token,
                 "username", user.getUsername(),
                 "email", user.getEmail(),
-                "role", user.getRole()
-        );
+                "role", user.getRole());
     }
 
     // ✅ Required by Spring Security
@@ -113,7 +134,6 @@ public class UserService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
-                List.of(new SimpleGrantedAuthority(user.getRole()))
-        );
+                List.of(new SimpleGrantedAuthority(user.getRole())));
     }
 }
