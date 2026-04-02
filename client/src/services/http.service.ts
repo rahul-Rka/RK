@@ -9,7 +9,9 @@ export class HttpService {
 
   constructor(private http: HttpClient) {}
 
-  /* ===== COMMON HEADERS ===== */
+  /* ===============================
+     ✅ COMMON HEADERS
+     =============================== */
   private getHeaders() {
     return {
       headers: new HttpHeaders({
@@ -19,7 +21,9 @@ export class HttpService {
     };
   }
 
-  /* ===== AUTH ===== */
+  /* ===============================
+     ✅ AUTH
+     =============================== */
   Login(data: any) {
     return this.http.post(
       `${this.serverName}/api/login`,
@@ -36,9 +40,10 @@ export class HttpService {
     );
   }
 
-  /* ===== BUSINESS ===== */
+  /* ===============================
+     ✅ BUSINESS
+     =============================== */
 
-  // Get all cargos
   getCargo() {
     return this.http.get(
       `${this.serverName}/api/business/cargo`,
@@ -46,7 +51,6 @@ export class HttpService {
     );
   }
 
-  // Add new cargo
   addCargo(data: any) {
     return this.http.post(
       `${this.serverName}/api/business/cargo`,
@@ -55,7 +59,6 @@ export class HttpService {
     );
   }
 
-  // Get all drivers
   getDrivers() {
     return this.http.get(
       `${this.serverName}/api/business/drivers`,
@@ -63,7 +66,6 @@ export class HttpService {
     );
   }
 
-  // ✅ Get all customers
   getCustomers() {
     return this.http.get(
       `${this.serverName}/api/business/customers`,
@@ -71,7 +73,7 @@ export class HttpService {
     );
   }
 
-  // ✅ Assign cargo to driver + customer
+  // ✅ FIXED: correct query params
   assignCargo(cargoId: number, driverId: number, customerId: number) {
     return this.http.post(
       `${this.serverName}/api/business/assign-cargo?cargoId=${cargoId}&driverId=${driverId}&customerId=${customerId}`,
@@ -80,9 +82,10 @@ export class HttpService {
     );
   }
 
-  /* ===== DRIVER ===== */
+  /* ===============================
+     ✅ DRIVER
+     =============================== */
 
-  // Driver dashboard
   getAssignOrders() {
     return this.http.get(
       `${this.serverName}/api/driver/cargo`,
@@ -90,7 +93,7 @@ export class HttpService {
     );
   }
 
-  // Driver updates status (own cargo only)
+  // ✅ FIXED: correct query params
   updateCargoStatus(cargoId: number, newStatus: string) {
     return this.http.put(
       `${this.serverName}/api/driver/update-cargo-status?cargoId=${cargoId}&newStatus=${newStatus}`,
@@ -99,9 +102,10 @@ export class HttpService {
     );
   }
 
-  /* ===== CUSTOMER ===== */
+  /* ===============================
+     ✅ CUSTOMER
+     =============================== */
 
-  // ✅ Customer dashboard (own cargos only)
   getCustomerCargos() {
     return this.http.get(
       `${this.serverName}/api/customer/cargo`,

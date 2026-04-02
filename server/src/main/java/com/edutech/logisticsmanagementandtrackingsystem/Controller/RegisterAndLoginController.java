@@ -2,15 +2,10 @@ package com.edutech.logisticsmanagementandtrackingsystem.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.*;
-import java.util.function.Function;
+import java.util.Map;
 
-import com.edutech.logisticsmanagementandtrackingsystem.entity.*;
-import com.edutech.logisticsmanagementandtrackingsystem.jwt.JwtUtil;
-import com.edutech.logisticsmanagementandtrackingsystem.repository.*;
+import com.edutech.logisticsmanagementandtrackingsystem.entity.User;
 import com.edutech.logisticsmanagementandtrackingsystem.service.UserService;
 
 @RestController
@@ -21,7 +16,7 @@ public class RegisterAndLoginController {
     private UserService userService;
 
     @PostMapping("/register")
-    public Object register(@RequestBody User user) {
+    public User register(@RequestBody User user) {
         return userService.registerUser(user);
     }
 

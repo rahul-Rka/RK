@@ -14,8 +14,6 @@ import com.edutech.logisticsmanagementandtrackingsystem.repository.*;
 import com.edutech.logisticsmanagementandtrackingsystem.jwt.JwtUtil;
 
 import java.util.*;
-import java.util.function.Function;
-
 import javax.transaction.Transactional;
 
 @Service
@@ -39,92 +37,42 @@ public class UserService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // ✅ Save user with encoded password
-    public User register(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
-    }
-
-    // ✅ Find user by username
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
-    // ✅ REGISTER — STREAM + FUNCTION MAPPING (NO IF)
-    // public User registerUser(User user) {
-
-    //     // String role = user.getRole();
-
-    //     // switch (role) {
-    //     // case "BUSINESS":
-    //     // Business b = new Business();
-    //     // b.setName(user.getUsername());
-    //     // b.setEmail(user.getEmail());
-    //     // businessRepository.save(b);
-    //     // break;
-    //     // case "DRIVER":
-    //     // Driver d = new Driver();
-    //     // d.setName(user.getUsername());
-    //     // d.setEmail(user.getEmail());
-    //     // driverRepository.save(d);
-    //     // break;
-    //     // case "CUSTOMER":
-    //     // Customer customer = new Customer();
-    //     // customer.setEmail(user.getEmail());
-    //     // customer.setName(user.getUsername());
-    //     // break;
-    //     // default:
-    //     // break;
-    //     // }
-
-    //     // return register(user);
-
-    //     Map<String, Function<User, Object>> roleHandlers = Map.of(
-    //             "BUSINESS", u -> {
-    //                 Business b = new Business();
-    //                 b.setName(u.getUsername());
-    //                 b.setEmail(u.getEmail());
-    //                 return businessRepository.save(b);
-    //             },
-    //             "DRIVER", u -> {
-    //                 Driver d = new Driver();
-    //                 d.setName(u.getUsername());
-    //                 d.setEmail(u.getEmail());
-    //                 return driverRepository.save(d);
-    //             });
-
-    //     roleHandlers.entrySet().stream()
-    //             .filter(e -> e.getKey().equalsIgnoreCase(user.getRole()))
-    //             .findFirst()
-    //             .map(e -> e.getValue().apply(user))
-    //             .orElseGet(() -> {
-    //                 Customer c = new Customer();
-    //                 c.setName(user.getUsername());
-    //                 c.setEmail(user.getEmail());
-    //                 return customerRepository.save(c);
-    //             });
-    //     return register(user);
-    // }
-
-
-    
-@Transactional
+    /* =========================
+       ✅ REGISTER USER
+       ========================= */
+    @Transactional
     public User registerUser(User user) {
+
+        // ✅ BACKEND VALIDATION – DUPLICATE USERNAME
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Username already exists"
+            );
+        }
+
+        // ✅ BACKEND VALIDATION – DUPLICATE EMAIL
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Email already exists"
+            );
+        }
 
         // 🔐 Encode password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        // ✅ Save USER first
+        // ✅ Save USER
         User savedUser = userRepository.save(user);
 
-        // ✅ Save role-specific entity
+        // ✅ Save role‑specific entity
         switch (savedUser.getRole()) {
 
             case "DRIVER":
                 Driver driver = new Driver();
                 driver.setName(savedUser.getUsername());
                 driver.setEmail(savedUser.getEmail());
-                driverRepository.save(driver);   // ✅ GUARANTEED
+                driverRepository.save(driver);
                 break;
 
             case "BUSINESS":
@@ -145,25 +93,35 @@ public class UserService implements UserDetailsService {
         return savedUser;
     }
 
-    // ✅ LOGIN — PASSWORD CHECK USING BCrypt (NO IF)
+    /* =========================
+       ✅ LOGIN USER
+       ========================= */
     public Map<String, Object> loginUser(Map<String, String> req) {
 
-        User user = Optional.ofNullable(userRepository.findByUsername(req.get("username")))
-                .filter(u -> passwordEncoder.matches(req.get("password"), u.getPassword()))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid Credentials"));
+        User user = Optional.ofNullable(
+                userRepository.findByUsername(req.get("username")))
+            .filter(u -> passwordEncoder.matches(req.get("password"), u.getPassword()))
+            .orElseThrow(() ->
+                new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Invalid Credentials"
+                )
+            );
 
         String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
 
         return Map.of(
-            
-                "token", token,
-                "id", user.getId(),
-                "username", user.getUsername(),
-                "email", user.getEmail(),
-                "role", user.getRole());
+            "token", token,
+            "id", user.getId(),
+            "username", user.getUsername(),
+            "email", user.getEmail(),
+            "role", user.getRole()
+        );
     }
 
-    // ✅ Required by Spring Security
+    /* =========================
+       ✅ SPRING SECURITY
+       ========================= */
     @Override
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
@@ -175,8 +133,9 @@ public class UserService implements UserDetailsService {
         }
 
         return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                List.of(new SimpleGrantedAuthority(user.getRole())));
+            user.getUsername(),
+            user.getPassword(),
+            List.of(new SimpleGrantedAuthority(user.getRole()))
+        );
     }
 }
