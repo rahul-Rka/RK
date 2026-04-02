@@ -1,6 +1,6 @@
 <div class="container mt-4">
 
-  <!-- ===== BUSINESS DASHBOARD ===== -->
+  <!-- ================= BUSINESS DASHBOARD ================= -->
   <ng-container *ngIf="role === 'BUSINESS'">
     <h2 class="mb-4">Business Dashboard</h2>
 
@@ -22,17 +22,13 @@
       <div class="col-md-4">
         <div class="card text-white bg-warning p-3 text-center">
           <h5>Quick Actions</h5>
-
-          <!-- ✅ FIXED ROUTES -->
           <a routerLink="/add-cargo" class="btn btn-light btn-sm mt-1">Add Cargo</a>
           <a routerLink="/assign-cargo" class="btn btn-light btn-sm mt-1">Assign Cargo</a>
-
         </div>
       </div>
     </div>
 
     <h4>All Cargo</h4>
-
     <table class="table table-bordered table-striped">
       <thead class="table-dark">
         <tr>
@@ -42,7 +38,6 @@
           <th>Status</th>
         </tr>
       </thead>
-
       <tbody>
         <tr *ngFor="let c of cargos">
           <td>{{ c.id }}</td>
@@ -50,7 +45,6 @@
           <td>{{ c.size }}</td>
           <td><span class="badge bg-info">{{ c.status }}</span></td>
         </tr>
-
         <tr *ngIf="cargos.length === 0">
           <td colspan="4" class="text-center">No cargo found</td>
         </tr>
@@ -58,7 +52,7 @@
     </table>
   </ng-container>
 
-  <!-- ===== DRIVER DASHBOARD ===== -->
+  <!-- ================= DRIVER DASHBOARD ================= -->
   <ng-container *ngIf="role === 'DRIVER'">
     <h2 class="mb-4">Driver Dashboard</h2>
 
@@ -72,7 +66,6 @@
           <th>Action</th>
         </tr>
       </thead>
-
       <tbody>
         <tr *ngFor="let c of assignedCargos">
           <td>{{ c.id }}</td>
@@ -80,13 +73,11 @@
           <td>{{ c.size }}</td>
           <td><span class="badge bg-warning text-dark">{{ c.status }}</span></td>
           <td>
-            <!-- ✅ FIXED -->
-            <a routerLink="/view-cargo-status" class="btn btn-sm btn-primary">
+            <button class="btn btn-sm btn-primary" (click)="goToViewCargo()">
               Update Status
-            </a>
+            </button>
           </td>
         </tr>
-
         <tr *ngIf="assignedCargos.length === 0">
           <td colspan="5" class="text-center">No assigned cargo</td>
         </tr>
@@ -94,30 +85,17 @@
     </table>
   </ng-container>
 
-  <!-- ===== CUSTOMER DASHBOARD ===== -->
+  <!-- ================= CUSTOMER DASHBOARD ================= -->
   <ng-container *ngIf="role === 'CUSTOMER'">
     <h2 class="mb-4">Customer Dashboard</h2>
 
-    <div class="card p-4 shadow" style="max-width: 500px; margin: auto;">
-      <h5>Track Your Cargo</h5>
+    <div class="card p-4 shadow text-center" style="max-width: 500px; margin: auto;">
+      <h5>Your Cargo Status</h5>
+      <p class="text-muted">View all cargos assigned to you.</p>
 
-      <div class="input-group mt-3">
-        <input type="number"
-               class="form-control"
-               placeholder="Enter Cargo ID"
-               [(ngModel)]="cargoIdInput" />
-
-        <button class="btn btn-dark" (click)="viewCargoStatus()">
-          Track
-        </button>
-      </div>
-
-      <div *ngIf="cargoStatus" class="mt-4">
-        <div class="alert alert-info">
-          <strong>Cargo ID:</strong> {{ cargoStatus.cargoId }}<br/>
-          <strong>Status:</strong> {{ cargoStatus.status }}
-        </div>
-      </div>
+      <button class="btn btn-dark mt-3" (click)="goToViewCargo()">
+        View My Cargos
+      </button>
     </div>
   </ng-container>
 

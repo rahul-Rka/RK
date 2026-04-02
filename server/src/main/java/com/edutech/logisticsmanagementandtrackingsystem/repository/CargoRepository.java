@@ -11,4 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CargoRepository extends JpaRepository<Cargo, Long> {
     List<Cargo> findByDriver_Id(Long driverId);
+    
+    List<Cargo> findByCustomer_Id(Long customerId);
+
 }

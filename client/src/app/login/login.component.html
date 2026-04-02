@@ -1,42 +1,114 @@
-
-
-<nav class="navbar navbar-dark bg-dark px-3">
-  <span class="navbar-brand">LGM</span>
-  <span class="navbar-text text-white">Login</span>
-</nav>
-
 <div class="container d-flex justify-content-center mt-5">
-  <div class="card p-4 shadow" style="width: 420px;">
-    <h4 class="text-center fw-bold">LOGISTIC MANAGEMENT SYSTEM</h4>
-    <p class="text-center text-muted">Please enter your user and password!</p>
+<div class="card p-4 shadow" style="width:420px;">
+<h4 class="text-center fw-bold">LOGISTIC MANAGEMENT SYSTEM</h4>
+<p class="text-center text-muted">
 
+      Please enter your user and password!
+</p>
+ 
     <form [formGroup]="itemForm" (ngSubmit)="login()">
-      <div class="mb-3">
-        <label class="form-label">Username</label>
-        <input type="text"
-               class="form-control"
-               formControlName="username"
-               placeholder="name@example.com" />
-      </div>
+ 
+      <!-- USERNAME -->
+<div class="mb-3">
+<label class="form-label">Username</label>
+<input
 
-      <div class="mb-3">
-        <label class="form-label">Password</label>
-        <input type="password"
-               class="form-control"
-               formControlName="password"
-               placeholder="Password" />
-      </div>
+          type="text"
 
-      <button type="submit"
-              class="btn btn-outline-dark w-100"
-              [disabled]="itemForm.invalid">
-        Login
-      </button>
+          class="form-control"
 
-      <p class="text-center mt-3">
-        Don't have an account?
-        <a routerLink="/registration"><strong>Registration</strong></a>
-      </p>
-    </form>
-  </div>
+          formControlName="username"
+
+        />
+ 
+        <small class="text-danger"
+
+          *ngIf="itemForm.controls['username'].touched && itemForm.controls['username'].errors">
+ 
+          <span *ngIf="itemForm.controls['username'].errors?.['required']">
+
+            Username is required
+</span><br>
+ 
+          <span *ngIf="itemForm.controls['username'].errors?.['minlength']">
+
+            Username must be at least 4 characters
+</span><br>
+ 
+          <span *ngIf="itemForm.controls['username'].errors?.['pattern']">
+
+            Only letters and numbers are allowed
+</span>
+</small>
 </div>
+ 
+      <!-- PASSWORD -->
+<div class="mb-3">
+<label class="form-label">Password</label>
+<input
+
+          type="password"
+
+          class="form-control"
+
+          formControlName="password"
+
+          placeholder="Password"
+
+        />
+ 
+        <small class="text-danger"
+
+          *ngIf="itemForm.controls['password'].touched && itemForm.controls['password'].errors">
+ 
+          <span *ngIf="itemForm.controls['password'].errors?.['required']">
+
+            Password is required
+</span><br>
+ 
+          <span *ngIf="itemForm.controls['password'].errors?.['minlength']">
+
+            Password must be at least 8 characters
+</span><br>
+ 
+          <span *ngIf="itemForm.controls['password'].errors?.['pattern']">
+
+            Password must contain letters, numbers and one special character
+</span>
+</small>
+</div>
+ 
+      <button
+
+        type="submit"
+
+        class="btn btn-outline-dark w-100"
+
+        [disabled]="itemForm.invalid">
+
+        Login
+</button>
+ 
+      <p class="text-center mt-3">
+
+        Don't have an account?
+<a routerLink="/registration"><strong>Registration</strong></a>
+</p>
+ 
+    </form>
+</div>
+</div>
+ 
+<!-- LOGIN ERROR -->
+<div *ngIf="loginError"
+
+     style="position:fixed; inset:0; background:rgba(0,0,0,0.5);
+
+            display:flex; align-items:center; justify-content:center; z-index:1000;">
+<div style="background:white; padding:25px; width:320px; border-radius:6px; text-align:center;">
+<h5 style="color:#dc3545;">Login Failed</h5>
+<p>Invalid username or password.</p>
+<button class="btn btn-danger w-100" (click)="loginError=false">OK</button>
+</div>
+</div>
+  

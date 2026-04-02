@@ -1,7 +1,5 @@
 package com.edutech.logisticsmanagementandtrackingsystem.entity;
 
-
-
 import javax.persistence.*;
 
 @Entity
@@ -23,7 +21,20 @@ public class Cargo {
     @JoinColumn(name = "driver_id")
     private Driver driver;
 
-    public Cargo() {}
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Cargo() {
+    }
 
     public Long getId() {
         return id;

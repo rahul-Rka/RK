@@ -16,86 +16,69 @@ import { HttpService } from '../../services/http.service';
 export class RegistrationComponent {
  
   itemForm: FormGroup;
+  registerSuccess: boolean = false;
+  registerError: boolean = false;
  
   constructor(
     private fb: FormBuilder,
     private service: HttpService,
     private router: Router
   ) {
+ 
     this.itemForm = this.fb.group({
-      username: ['', [
-        Validators.required,
-        this.minLengthCustom(5),
-        this.alphaNumericValidator
-      ]],
-      password: ['', [
-        Validators.required,
-        this.passwordStrengthValidator
-      ]],
-      email: ['', [
-        Validators.required,
-        this.emailCustomValidator
-      ]],
-      role: ['', [
-        this.roleRequiredValidator
-      ]]
+ 
+      username: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.pattern('^[a-zA-Z0-9]+$')
+        ]
+      ],
+ 
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.pattern(
+            '^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[@$!%*#?&^])[A-Za-z0-9@$!%*#?&^]+$'
+          )
+        ]
+      ],
+ 
+      email: [
+        '',
+        [
+          Validators.required,
+          Validators.email
+        ]
+      ],
+ 
+      role: [
+        '',
+        Validators.required
+      ]
     });
   }
  
-  /* ======== CUSTOM VALIDATORS (SAME CLASS) ======== */
- 
-  minLengthCustom(min: number) {
-    return (control: AbstractControl): ValidationErrors | null => {
-      if (!control.value) return null;
-      return control.value.length >= min
-        ? null
-        : { minLengthCustom: true };
-    };
-  }
- 
-  alphaNumericValidator(control: AbstractControl): ValidationErrors | null {
-    if (!control.value) return null;
-    const regex = /^[a-zA-Z0-9]+$/;
-    return regex.test(control.value)
-      ? null
-      : { alphaNumeric: true };
-  }
- 
-  passwordStrengthValidator(control: AbstractControl): ValidationErrors | null {
-    if (!control.value) return null;
-    const regex = /^(?=.*[0-9]).{6,}$/;
-    return regex.test(control.value)
-      ? null
-      : { passwordStrength: true };
-  }
- 
-  emailCustomValidator(control: AbstractControl): ValidationErrors | null {
-    if (!control.value) return null;
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(control.value)
-      ? null
-      : { emailCustom: true };
-  }
- 
-  roleRequiredValidator(control: AbstractControl): ValidationErrors | null {
-    return control.value
-      ? null
-      : { roleRequired: true };
-  }
- 
-  /* ======== GETTERS FOR TEMPLATE ======== */
-  get username() { return this.itemForm.get('username'); }
-  get password() { return this.itemForm.get('password'); }
-  get email() { return this.itemForm.get('email'); }
-  get role() { return this.itemForm.get('role'); }
- 
-  /* ======== SUBMIT ======== */
+  /* ===== SUBMIT ===== */
   register() {
     if (this.itemForm.valid) {
       this.service.registerUser(this.itemForm.value).subscribe({
-        next: () => this.router.navigate(['/login']),
-        error: () => alert('Registration failed. Please try again.')
+        next: () => {
+          this.registerSuccess = true;
+          setTimeout(() => {
+            this.registerSuccess = false;
+            this.router.navigate(['/login']);
+          }, 1500);
+        },
+        error: () => {
+          this.registerError = true;
+        }
       });
+    } else {
+      this.itemForm.markAllAsTouched();
     }
   }
 }

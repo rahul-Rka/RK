@@ -8,15 +8,17 @@ import { HttpService } from '../../services/http.service';
 })
 export class AssginCargoComponent implements OnInit {
 
-  cargos: any[]        = [];
-  drivers: any[]       = [];
+  cargos: any[] = [];
+  drivers: any[] = [];
+  customers: any[] = [];          // ✅ NEW
   assignedCargos: any[] = [];
 
-  selectedCargoId: any  = null;
-  selectedDriverId: any = null;
+  selectedCargoId: number | null = null;
+  selectedDriverId: number | null = null;
+  selectedCustomerId: number | null = null; // ✅ NEW
 
   successMessage = '';
-  errorMessage   = '';
+  errorMessage = '';
   role = '';
 
   constructor(private service: HttpService, private router: Router) {}
@@ -25,48 +27,46 @@ export class AssginCargoComponent implements OnInit {
     this.role = localStorage.getItem('role') || '';
 
     if (this.role === 'BUSINESS') {
-      this.service.getCargo().subscribe({
-        next: (data: any) => this.cargos = data,
-        error: () => {}
-      });
-      this.service.getDrivers().subscribe({
-        next: (data: any) => 
-          {
-            this.drivers = data
-            console.log(this.drivers);
 
-          }
-        
-        // error: () => {}
+      this.service.getCargo().subscribe(data => {
+        this.cargos = data as any[];
       });
 
-     
+      this.service.getDrivers().subscribe(data => {
+        this.drivers = data as any[];
+      });
+
+      // ✅ LOAD CUSTOMERS
+      this.service.getCustomers().subscribe(data => {
+        this.customers = data as any[];
+      });
     }
 
-  
-if (this.role === 'DRIVER') {
-  this.service.getAssignOrders().subscribe({
-    next: (data: any) => this.assignedCargos = data,
-    error: () => {}
-  });
-}
-
+    if (this.role === 'DRIVER') {
+      this.service.getAssignOrders().subscribe(data => {
+        this.assignedCargos = data as any[];
+      });
+    }
   }
 
   assign(): void {
-    if (this.selectedDriverId && this.selectedCargoId) {
-      this.service.assignDriver(
-        Number(this.selectedDriverId),
-        Number(this.selectedCargoId)
+    if (this.selectedCargoId && this.selectedDriverId && this.selectedCustomerId) {
+
+      this.service.assignCargo(
+        this.selectedCargoId,
+        this.selectedDriverId,
+        this.selectedCustomerId
       ).subscribe({
         next: () => {
           this.successMessage = 'Cargo assigned successfully!';
-          this.errorMessage   = '';
-          this.selectedCargoId  = null;
+          this.errorMessage = '';
+
+          this.selectedCargoId = null;
           this.selectedDriverId = null;
+          this.selectedCustomerId = null;
         },
         error: () => {
-          this.errorMessage   = 'Failed to assign cargo. Please try again.';
+          this.errorMessage = 'Failed to assign cargo.';
           this.successMessage = '';
         }
       });

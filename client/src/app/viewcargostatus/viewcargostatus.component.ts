@@ -8,48 +8,49 @@ import { HttpService } from '../../services/http.service';
 })
 export class ViewcargostatusComponent implements OnInit {
 
-  // Customer fields
-  cargoIdInput: number = 0;
-  cargoStatus: any     = null;
-
-  // Driver fields
-  updateCargoId: number = 0;
-  newStatus             = '';
-  successMessage        = '';
-  errorMessage          = '';
-
   role = '';
+
+  // ✅ Common list
+  cargos: any[] = [];
+
+  // ✅ Driver-only fields
+  updateCargoId: number | null = null;
+  newStatus = '';
+  successMessage = '';
+  errorMessage = '';
 
   constructor(private service: HttpService, private router: Router) {}
 
   ngOnInit(): void {
     this.role = localStorage.getItem('role') || '';
-  }
 
-  viewStatus(): void {
-    if (this.cargoIdInput) {
-      this.service.getOrderStatus(this.cargoIdInput).subscribe({
-        next: (res: any) => {
-          this.cargoStatus  = res;
-          this.errorMessage = '';
-        },
-        error: () => {
-          this.errorMessage = 'Cargo not found. Please check the ID.';
-          this.cargoStatus  = null;
-        }
+    // ✅ CUSTOMER DASHBOARD
+    if (this.role === 'CUSTOMER') {
+      this.service.getCustomerCargos().subscribe({
+        next: (res: any) => this.cargos = res,
+        error: (err: any) => console.error(err)
+      });
+    }
+
+    // ✅ DRIVER DASHBOARD
+    if (this.role === 'DRIVER') {
+      this.service.getAssignOrders().subscribe({
+        next: (res: any) => this.cargos = res,
+        error: (err: any) => console.error(err)
       });
     }
   }
 
+  // ✅ DRIVER ONLY: update status
   updateStatus(): void {
     if (this.updateCargoId && this.newStatus) {
-      this.service.updateCargoStatus(this.newStatus, this.updateCargoId).subscribe({
+      this.service.updateCargoStatus(this.updateCargoId, this.newStatus).subscribe({
         next: () => {
           this.successMessage = 'Status updated successfully!';
-          this.errorMessage   = '';
+          this.errorMessage = '';
         },
         error: () => {
-          this.errorMessage   = 'Failed to update status. Please try again.';
+          this.errorMessage = 'Failed to update status.';
           this.successMessage = '';
         }
       });

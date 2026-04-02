@@ -1,9 +1,11 @@
 package com.edutech.logisticsmanagementandtrackingsystem.service;
 
+import java.util.List;
+
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 import com.edutech.logisticsmanagementandtrackingsystem.entity.Cargo;
 import com.edutech.logisticsmanagementandtrackingsystem.entity.Driver;
@@ -25,71 +27,45 @@ public class CargoService {
         return cargoRepository.save(cargo);
     }
 
-    /* ✅ VIEW ALL CARGOS */
+    /* ✅ VIEW ALL CARGOS (BUSINESS) */
     public List<Cargo> getAllCargo() {
         return cargoRepository.findAll();
     }
 
-    /* ✅ VIEW CARGOS ASSIGNED TO DRIVER */
-    
-public List<Cargo> getCargosForLoggedInDriver(String username) {
+    /* ✅ DRIVER DASHBOARD — ONLY OWN CARGOS */
+    public List<Cargo> getCargosForLoggedInDriver(String username) {
 
-    Driver driver = driverRepository.findByName(username);
+        Driver driver = driverRepository.findByName(username);
 
-    if (driver == null) {
-        return List.of();
+        if (driver == null) {
+            return List.of();
+        }
+
+        return cargoRepository.findByDriver_Id(driver.getId());
     }
 
-    return cargoRepository.findByDriver_Id(driver.getId());
-}
+    /* ✅ DRIVER UPDATES ONLY OWN CARGO */
+    @Transactional
+    public Cargo updateStatusForDriver(
+            Long cargoId,
+            String newStatus,
+            String username) {
 
-    /* ✅ UPDATE STATUS USING STREAM */
-    public Cargo updateStatus(Long cargoId, String newStatus) {
+        Cargo cargo = cargoRepository.findById(cargoId)
+                .orElseThrow(() -> new RuntimeException("Cargo not found"));
 
-        return cargoRepository.findAll()
-                .stream()
-                .filter(c -> c.getId().equals(cargoId))
-                .findFirst()
-                .map(c -> {
-                    c.setStatus(newStatus);
-                    return cargoRepository.save(c);
-                })
-                .orElse(null);
+        if (cargo.getDriver() == null ||
+            !cargo.getDriver().getName().equals(username)) {
+            throw new RuntimeException("Unauthorized cargo update");
+        }
+
+        cargo.setStatus(newStatus);
+        return cargoRepository.save(cargo);
     }
 
-    /* ✅ ASSIGN DRIVER USING STREAM */
-    public Cargo assignCargoToDriver(Long cargoId, Long driverId) {
-
-        Cargo cargo = cargoRepository.findAll()
-                .stream()
-                .filter(c -> c.getId().equals(cargoId))
-                .findFirst()
-                .orElse(null);
-
-        Driver driver = driverRepository.findAll()
-                .stream()
-                .filter(d -> d.getId().equals(driverId))
-                .findFirst()
-                .orElse(null);
-
-        return java.util.stream.Stream.of(cargo)
-                .filter(c -> c != null && driver != null)
-                .findFirst()
-                .map(c -> {
-                    c.setDriver(driver);
-                    c.setStatus("IN_TRANSIT"); // better than ASSIGNED
-                    return cargoRepository.save(c);
-                })
-                .orElse(null);
-    }
-
-    /* ✅ GET CARGO BY ID USING STREAM */
+    /* ✅ GET CARGO BY ID (SAFE) */
     public Cargo getCargoById(Long cargoId) {
-
-        return cargoRepository.findAll()
-                .stream()
-                .filter(c -> c.getId().equals(cargoId))
-                .findFirst()
+        return cargoRepository.findById(cargoId)
                 .orElse(null);
     }
 }
