@@ -1,6 +1,3 @@
-
-
-
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -12,7 +9,6 @@ export class AuthService {
   private role: string = '';
 
   constructor() {
-    // Restore session from localStorage on init
     const token = localStorage.getItem('token');
     const savedRole = localStorage.getItem('role');
     if (token && savedRole) {
@@ -26,7 +22,8 @@ export class AuthService {
   }
 
   get getLoginStatus(): boolean {
-    return this.loggedIn;
+    // ✅ safer: also checks token
+    return this.loggedIn && !!localStorage.getItem('token');
   }
 
   get getRole(): string {
