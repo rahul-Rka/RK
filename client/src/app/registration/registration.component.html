@@ -1,93 +1,101 @@
 <nav class="navbar navbar-dark bg-dark px-3">
 <span class="navbar-brand">LGM</span>
 </nav>
- 
 <div class="container d-flex justify-content-center mt-5">
 <div class="card p-4 shadow" style="width: 420px;">
- 
-    <h4 class="text-center fw-bold">LOGISTIC MANAGEMENT SYSTEM</h4>
+<h4 class="text-center fw-bold">LOGISTIC MANAGEMENT SYSTEM</h4>
 <p class="text-center text-muted">Please enter your details here</p>
- 
-    <form [formGroup]="itemForm" (ngSubmit)="register()">
- 
-      <!-- ================= USERNAME ================= -->
+<form [formGroup]="itemForm" (ngSubmit)="register()">
+<!-- ================= USERNAME ================= -->
 <div class="mb-3">
 <label class="form-label">Username</label>
 <input
+
           type="text"
+
           class="form-control"
+
           formControlName="username"
+
           placeholder="Username"
+
         />
- 
-        <small class="text-danger"
+<small class="text-danger"
+
           *ngIf="itemForm.controls['username'].touched && itemForm.controls['username'].errors">
- 
-          <span *ngIf="itemForm.controls['username'].errors?.['required']">
+<span *ngIf="itemForm.controls['username'].errors?.['required']">
+
             Username is required
 </span><br>
- 
-          <span *ngIf="itemForm.controls['username'].errors?.['minlength']">
+<span *ngIf="itemForm.controls['username'].errors?.['minlength']">
+
             Username must be at least 4 characters
 </span><br>
- 
-          <span *ngIf="itemForm.controls['username'].errors?.['pattern']">
+<span *ngIf="itemForm.controls['username'].errors?.['pattern']">
+
             Only letters and numbers are allowed
 </span>
 </small>
 </div>
- 
-      <!-- ================= PASSWORD ================= -->
+<!-- ================= PASSWORD ================= -->
 <div class="mb-3">
 <label class="form-label">Password</label>
 <input
+
           type="password"
+
           class="form-control"
+
           formControlName="password"
+
           placeholder="Password"
+
         />
- 
-        <small class="text-danger"
+<small class="text-danger"
+
           *ngIf="itemForm.controls['password'].touched && itemForm.controls['password'].errors">
- 
-          <span *ngIf="itemForm.controls['password'].errors?.['required']">
+<span *ngIf="itemForm.controls['password'].errors?.['required']">
+
             Password is required
 </span><br>
- 
-          <span *ngIf="itemForm.controls['password'].errors?.['minlength']">
+<span *ngIf="itemForm.controls['password'].errors?.['minlength']">
+
             Password must be at least 8 characters
 </span><br>
- 
-          <span *ngIf="itemForm.controls['password'].errors?.['pattern']">
+<span *ngIf="itemForm.controls['password'].errors?.['pattern']">
+
             Password must include letters, numbers and one special character
 </span>
 </small>
 </div>
- 
-      <!-- ================= EMAIL ================= -->
+<!-- ================= EMAIL ================= -->
 <div class="mb-3">
 <label class="form-label">Email</label>
 <input
+
           type="email"
+
           class="form-control"
+
           formControlName="email"
+
           placeholder="Email"
+
         />
- 
-        <small class="text-danger"
+<small class="text-danger"
+
           *ngIf="itemForm.controls['email'].touched && itemForm.controls['email'].errors">
- 
-          <span *ngIf="itemForm.controls['email'].errors?.['required']">
+<span *ngIf="itemForm.controls['email'].errors?.['required']">
+
             Email is required
 </span><br>
- 
-          <span *ngIf="itemForm.controls['email'].errors?.['email']">
+<span *ngIf="itemForm.controls['email'].errors?.['email']">
+
             Enter a valid email address
 </span>
 </small>
 </div>
- 
-      <!-- ================= ROLE ================= -->
+<!-- ================= ROLE ================= -->
 <div class="mb-3">
 <label class="form-label">Role</label>
 <select class="form-select" formControlName="role">
@@ -96,59 +104,145 @@
 <option value="DRIVER">Driver</option>
 <option value="CUSTOMER">Customer</option>
 </select>
- 
-        <small class="text-danger"
+<small class="text-danger"
+
           *ngIf="itemForm.controls['role'].touched && itemForm.controls['role'].errors">
+
           Role is required
 </small>
 </div>
  
-      <!-- ================= BACKEND ERROR MESSAGE ================= -->
-<div *ngIf="errorMessage" class="alert alert-danger mt-3">
-        {{ errorMessage }}
+      <!-- ✅ ADDED: DRIVER AGE (show only for DRIVER) -->
+<div class="mb-3" *ngIf="itemForm.get('role')?.value === 'DRIVER'">
+<label class="form-label">Driver Age</label>
+<input
+
+          type="number"
+
+          class="form-control"
+
+          formControlName="age"
+
+          placeholder="Enter age (18+)"
+
+        />
+ 
+        <small class="text-danger"
+
+          *ngIf="itemForm.controls['age']?.touched && itemForm.controls['age']?.errors">
+ 
+          <span *ngIf="itemForm.controls['age'].errors?.['required']">
+
+            Age is required for Driver
+</span><br>
+ 
+          <span *ngIf="itemForm.controls['age'].errors?.['min']">
+
+            Driver must be 18 or above
+</span><br>
+ 
+          <span *ngIf="itemForm.controls['age'].errors?.['pattern']">
+
+            Enter a valid age number
+</span>
+</small>
 </div>
  
-      <!-- ================= SUBMIT ================= -->
+      <!-- ✅ ADDED: DRIVER LICENSE (only when DRIVER & age >= 18) -->
+<div class="mb-3"
+
+        *ngIf="itemForm.get('role')?.value === 'DRIVER' && (itemForm.get('age')?.value >= 18)">
+<label class="form-label">Driver License Number</label>
+<input
+
+          type="text"
+
+          class="form-control"
+
+          formControlName="licenseNumber"
+
+          placeholder="SS-RRRRYYYYNNNNNNN (e.g., TN-1234202101234567)"
+
+        />
+ 
+        <small class="text-danger"
+
+          *ngIf="itemForm.controls['licenseNumber']?.touched && itemForm.controls['licenseNumber']?.errors">
+ 
+          <span *ngIf="itemForm.controls['licenseNumber'].errors?.['required']">
+
+            License number is required
+</span><br>
+ 
+          <span *ngIf="itemForm.controls['licenseNumber'].errors?.['pattern']">
+
+            Invalid format. Use SS-RRRRYYYYNNNNNNN (Example: TN-1234202101234567)
+</span>
+</small>
+</div>
+<!-- ================= BACKEND ERROR MESSAGE ================= -->
+<div *ngIf="errorMessage" class="alert alert-danger mt-3">
+
+        {{ errorMessage }}
+</div>
+<!-- ================= SUBMIT ================= -->
 <button
+
         type="submit"
+
         class="btn btn-dark w-100"
+
         [disabled]="itemForm.invalid">
+
         Register
 </button>
- 
-      <p class="text-center mt-3">
+<p class="text-center mt-3">
+
         Already have an account?
 <a routerLink="/login"><strong>Login</strong></a>
 </p>
- 
-    </form>
+</form>
 </div>
 </div>
- 
 <!-- ================= SUCCESS MODAL ================= -->
 <div
+
   *ngIf="registerSuccess"
+
   style="
+
     position: fixed;
+
     inset: 0;
+
     background: rgba(0,0,0,0.5);
+
     display: flex;
+
     align-items: center;
+
     justify-content: center;
+
     z-index: 1000;
+
   ">
- 
-  <div
+<div
+
     style="
+
       background: white;
+
       padding: 25px;
+
       width: 320px;
+
       border-radius: 6px;
+
       text-align: center;
+
     ">
- 
-    <h5 style="color:#198754;">Registration Successful</h5>
+<h5 style="color:#198754;">Registration Successful</h5>
 <p>Your account has been created successfully.</p>
- 
-  </div>
 </div>
+</div>
+ 
