@@ -28,31 +28,33 @@ public class BusinessController {
     @Autowired
     private CustomerRepository customerRepository;
 
-    /* ✅ ADD CARGO */
     @PostMapping("/cargo")
     public ResponseEntity<Cargo> addCargo(@RequestBody Cargo cargo) {
         return ResponseEntity.ok(businessService.addCargo(cargo));
     }
 
-    /* ✅ GET ALL DRIVERS */
+    // ✅ UPDATED: return only AVAILABLE drivers
+    // ✅ If location param present -> available drivers at that location
     @GetMapping("/drivers")
-    public List<Driver> getAllDrivers() {
-        return driverRepository.findAll();
+    public List<Driver> getAllDrivers(@RequestParam(required = false) String location) {
+
+        if (location != null && !location.trim().isEmpty()) {
+            return driverRepository.findByAvailableTrueAndCurrentLocationIgnoreCase(location.trim());
+        }
+
+        return driverRepository.findByAvailableTrue();
     }
 
-    /* ✅ GET ALL CUSTOMERS */
     @GetMapping("/customers")
     public List<Customer> getAllCustomers() {
         return customerRepository.findAll();
     }
 
-    /* ✅ GET ALL CARGO */
     @GetMapping("/cargo")
     public ResponseEntity<List<Cargo>> getAllCargo() {
         return ResponseEntity.ok(businessService.getAllCargo());
     }
 
-    /* ✅ ASSIGN CARGO TO DRIVER + CUSTOMER */
     @PostMapping("/assign-cargo")
     public ResponseEntity<Cargo> assignCargo(
             @RequestParam Long cargoId,
@@ -60,9 +62,7 @@ public class BusinessController {
             @RequestParam Long customerId) {
 
         return ResponseEntity.ok(
-            businessService.assignCargoToDriverAndCustomer(
-                cargoId, driverId, customerId
-            )
+            businessService.assignCargoToDriverAndCustomer(cargoId, driverId, customerId)
         );
     }
 }

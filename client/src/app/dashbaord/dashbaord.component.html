@@ -83,6 +83,30 @@
   <ng-container *ngIf="role === 'DRIVER'">
     <h2 class="page-title mb-4">Driver Dashboard</h2>
 
+    <!-- ✅ NEW: Availability + Location Card -->
+    <div class="card p-3 mb-3 shadow-sm">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <div class="fw-bold">Availability</div>
+          <div class="text-muted small">
+            {{ driverAvailable === null ? 'Click toggle to load status' : (driverAvailable ? 'Available' : 'Busy') }}
+          </div>
+        </div>
+
+        <button class="btn btn-sm btn-dark" (click)="toggleAvailability()">
+          Toggle
+        </button>
+      </div>
+
+      <div class="mt-3">
+        <label class="form-label">Current Location (optional)</label>
+        <div class="input-group">
+          <input class="form-control" [(ngModel)]="locationInput" placeholder="e.g., Chennai">
+          <button class="btn btn-outline-secondary" (click)="saveLocation()">Save</button>
+        </div>
+      </div>
+    </div>
+
     <div class="table-card">
       <table class="table app-table">
         <thead>

@@ -9,9 +9,6 @@ export class HttpService {
 
   constructor(private http: HttpClient) {}
 
-  /* ===============================
-     ✅ COMMON HEADERS
-     =============================== */
   private getHeaders() {
     return {
       headers: new HttpHeaders({
@@ -21,9 +18,9 @@ export class HttpService {
     };
   }
 
-  /* ===============================
-     ✅ AUTH
-     =============================== */
+  // ===============================
+  // AUTH
+  // ===============================
   Login(data: any) {
     return this.http.post(
       `${this.serverName}/api/login`,
@@ -40,10 +37,9 @@ export class HttpService {
     );
   }
 
-  /* ===============================
-     ✅ BUSINESS
-     =============================== */
-
+  // ===============================
+  // BUSINESS
+  // ===============================
   getCargo() {
     return this.http.get(
       `${this.serverName}/api/business/cargo`,
@@ -59,9 +55,18 @@ export class HttpService {
     );
   }
 
+  // ✅ Available drivers (no location)
   getDrivers() {
     return this.http.get(
       `${this.serverName}/api/business/drivers`,
+      this.getHeaders()
+    );
+  }
+
+  // ✅ Available drivers filtered by location
+  getDriversByLocation(location: string) {
+    return this.http.get(
+      `${this.serverName}/api/business/drivers?location=${encodeURIComponent(location)}`,
       this.getHeaders()
     );
   }
@@ -73,7 +78,7 @@ export class HttpService {
     );
   }
 
-  // ✅ FIXED: correct query params
+  // ✅ IMPORTANT FIX: use '&' (NOT '&amp;') in TS
   assignCargo(cargoId: number, driverId: number, customerId: number) {
     return this.http.post(
       `${this.serverName}/api/business/assign-cargo?cargoId=${cargoId}&driverId=${driverId}&customerId=${customerId}`,
@@ -82,10 +87,9 @@ export class HttpService {
     );
   }
 
-  /* ===============================
-     ✅ DRIVER
-     =============================== */
-
+  // ===============================
+  // DRIVER
+  // ===============================
   getAssignOrders() {
     return this.http.get(
       `${this.serverName}/api/driver/cargo`,
@@ -93,7 +97,7 @@ export class HttpService {
     );
   }
 
-  // ✅ FIXED: correct query params
+  // ✅ IMPORTANT FIX: use '&' (NOT '&amp;') in TS
   updateCargoStatus(cargoId: number, newStatus: string) {
     return this.http.put(
       `${this.serverName}/api/driver/update-cargo-status?cargoId=${cargoId}&newStatus=${newStatus}`,
@@ -102,10 +106,25 @@ export class HttpService {
     );
   }
 
-  /* ===============================
-     ✅ CUSTOMER
-     =============================== */
+  toggleAvailability() {
+    return this.http.post(
+      `${this.serverName}/api/driver/availability/toggle`,
+      {},
+      this.getHeaders()
+    );
+  }
 
+  updateDriverLocation(currentLocation: string) {
+    return this.http.put(
+      `${this.serverName}/api/driver/location`,
+      { currentLocation },
+      this.getHeaders()
+    );
+  }
+
+  // ===============================
+  // CUSTOMER
+  // ===============================
   getCustomerCargos() {
     return this.http.get(
       `${this.serverName}/api/customer/cargo`,

@@ -1,6 +1,7 @@
 package com.edutech.logisticsmanagementandtrackingsystem.Controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,29 +10,27 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import com.edutech.logisticsmanagementandtrackingsystem.entity.Cargo;
+import com.edutech.logisticsmanagementandtrackingsystem.entity.Driver;
 import com.edutech.logisticsmanagementandtrackingsystem.service.CargoService;
+import com.edutech.logisticsmanagementandtrackingsystem.service.DriverService;
 
 @RestController
 @RequestMapping("/api/driver")
-@PreAuthorize("hasAuthority('DRIVER')")   // ✅ ENABLE SECURITY
+@PreAuthorize("hasAuthority('DRIVER')")
 public class DriverController {
 
     @Autowired
     private CargoService cargoService;
 
-    /* ✅ DRIVER DASHBOARD */
+    @Autowired
+    private DriverService driverService;
+
     @GetMapping("/cargo")
-    public ResponseEntity<List<Cargo>> getAssignedCargos(
-            Authentication authentication) {
-
+    public ResponseEntity<List<Cargo>> getAssignedCargos(Authentication authentication) {
         String username = authentication.getName();
-
-        return ResponseEntity.ok(
-            cargoService.getCargosForLoggedInDriver(username)
-        );
+        return ResponseEntity.ok(cargoService.getCargosForLoggedInDriver(username));
     }
 
-    /* ✅ DRIVER CAN UPDATE ONLY OWN CARGO */
     @PutMapping("/update-cargo-status")
     public ResponseEntity<Cargo> updateCargoStatus(
             Authentication authentication,
@@ -39,9 +38,24 @@ public class DriverController {
             @RequestParam String newStatus) {
 
         String username = authentication.getName();
+        return ResponseEntity.ok(cargoService.updateStatusForDriver(cargoId, newStatus, username));
+    }
 
-        return ResponseEntity.ok(
-            cargoService.updateStatusForDriver(cargoId, newStatus, username)
-        );
+    // ✅ NEW: toggle availability
+    @PostMapping("/availability/toggle")
+    public ResponseEntity<Driver> toggleAvailability(Authentication authentication) {
+        String username = authentication.getName();
+        return ResponseEntity.ok(driverService.toggleAvailability(username));
+    }
+
+    // ✅ NEW: update location (optional)
+    @PutMapping("/location")
+    public ResponseEntity<Driver> updateLocation(
+            Authentication authentication,
+            @RequestBody Map<String, String> body) {
+
+        String username = authentication.getName();
+        String location = body.getOrDefault("currentLocation", "");
+        return ResponseEntity.ok(driverService.updateLocation(username, location));
     }
 }

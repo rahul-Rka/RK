@@ -10,11 +10,14 @@ import { HttpService } from '../../services/http.service';
 })
 export class DashbaordComponent implements OnInit {
 
-  role: string = '';
-
+  role = '';
   cargos: any[] = [];
   drivers: any[] = [];
   assignedCargos: any[] = [];
+
+  // ✅ availability UI state
+  driverAvailable: boolean | null = null;
+  locationInput = '';
 
   constructor(
     private authService: AuthService,
@@ -26,33 +29,27 @@ export class DashbaordComponent implements OnInit {
     this.role = this.authService.getRole;
 
     if (this.role === 'BUSINESS') {
-      this.loadCargos();
-      this.loadDrivers();
+      this.service.getCargo().subscribe((res: any) => this.cargos = res);
+      this.service.getDrivers().subscribe((res: any) => this.drivers = res);
     }
 
     if (this.role === 'DRIVER') {
-      this.loadAssignedCargos();
+      this.service.getAssignOrders().subscribe((res: any) => this.assignedCargos = res);
     }
   }
 
-  loadCargos() {
-    this.service.getCargo().subscribe({
-      next: (res: any) => this.cargos = res,
-      error: err => console.error(err)
+  toggleAvailability() {
+    this.service.toggleAvailability().subscribe({
+      next: (d: any) => this.driverAvailable = d.available,
+      error: (err: any) => console.error(err)
     });
   }
 
-  loadDrivers() {
-    this.service.getDrivers().subscribe({
-      next: (res: any) => this.drivers = res,
-      error: err => console.error(err)
-    });
-  }
-
-  loadAssignedCargos() {
-    this.service.getAssignOrders().subscribe({
-      next: (res: any) => this.assignedCargos = res,
-      error: err => console.error(err)
+  saveLocation() {
+    if (!this.locationInput) return;
+    this.service.updateDriverLocation(this.locationInput).subscribe({
+      next: () => {},
+      error: (err: any) => console.error(err)
     });
   }
 

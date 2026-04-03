@@ -1,7 +1,5 @@
 package com.edutech.logisticsmanagementandtrackingsystem.entity;
 
-// package com.edutech.logisticsmanagementandtrackingsystem.entity;
-
 import javax.persistence.*;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -16,43 +14,34 @@ public class Driver {
     private String name;
     private String email;
 
+    @Column(nullable = false)
+    private boolean available = true;
+
+    // ✅ Ensure DB column name matches ALTER TABLE (current_location)
+    @Column(name = "current_location")
+    private String currentLocation;
+
     @OneToMany(mappedBy = "driver")
     @JsonIgnore
     private List<Cargo> assignedCargos;
 
-    
-
     public Driver() {}
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getName() {
-        return name;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public boolean isAvailable() { return available; }
+    public void setAvailable(boolean available) { this.available = available; }
 
-    public String getEmail() {
-        return email;
-    }
+    public String getCurrentLocation() { return currentLocation; }
+    public void setCurrentLocation(String currentLocation) { this.currentLocation = currentLocation; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public List<Cargo> getAssignedCargos() {
-        return assignedCargos;
-    }
-
-    public void setAssignedCargos(List<Cargo> assignedCargos) {
-        this.assignedCargos = assignedCargos;
-    }
+    public List<Cargo> getAssignedCargos() { return assignedCargos; }
+    public void setAssignedCargos(List<Cargo> assignedCargos) { this.assignedCargos = assignedCargos; }
 }

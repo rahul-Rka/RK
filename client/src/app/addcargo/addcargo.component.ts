@@ -6,7 +6,7 @@ import { HttpService } from '../../services/http.service';
 @Component({
   selector: 'app-addcargo',
   templateUrl: './addcargo.component.html',
-  styleUrls:['./addcargo.component.scss']
+  styleUrls: ['./addcargo.component.scss']
 })
 export class AddcargoComponent {
 
@@ -22,6 +22,9 @@ export class AddcargoComponent {
     this.itemForm = this.fb.group({
       content: ['', Validators.required],
       size: ['', Validators.required],
+
+      // ✅ NEW: Source Location required for driver filtering
+      sourceLocation: ['', Validators.required]
     });
   }
 
@@ -38,6 +41,8 @@ export class AddcargoComponent {
           this.successMessage = '';
         }
       });
+    } else {
+      this.itemForm.markAllAsTouched();
     }
   }
 

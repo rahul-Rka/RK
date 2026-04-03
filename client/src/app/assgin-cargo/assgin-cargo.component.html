@@ -1,7 +1,6 @@
 <!-- BUSINESS: assign cargo -->
 <ng-container *ngIf="role === 'BUSINESS'">
 
-  <!-- ✅ Wrapper for center + header spacing -->
   <div class="assign-page">
     <div class="assign-wrap">
 
@@ -10,23 +9,33 @@
         <!-- Select Cargo -->
         <div class="mb-3">
           <label class="form-label">Select Cargo</label>
-          <select class="form-select" [(ngModel)]="selectedCargoId">
+          <select class="form-select"
+                  [(ngModel)]="selectedCargoId"
+                  (change)="onCargoChange()">
             <option [ngValue]="null">-- Select Cargo --</option>
             <option *ngFor="let c of cargos" [ngValue]="c.id">
               #{{ c.id }} — {{ c.content }} ({{ c.status }})
             </option>
           </select>
+
+          <small class="text-muted" *ngIf="selectedCargoLocation">
+            Filtering drivers by cargo location: <b>{{ selectedCargoLocation }}</b>
+          </small>
         </div>
 
         <!-- Select Driver -->
         <div class="mb-3">
-          <label class="form-label">Select Driver</label>
+          <label class="form-label">Select Driver (Available + Location match)</label>
           <select class="form-select" [(ngModel)]="selectedDriverId">
             <option [ngValue]="null">-- Select Driver --</option>
             <option *ngFor="let d of drivers" [ngValue]="d.id">
-              #{{ d.id }} — {{ d.name }}
+              #{{ d.id }} — {{ d.name }} ({{ d.currentLocation || 'No location' }})
             </option>
           </select>
+
+          <small class="text-muted" *ngIf="drivers.length === 0 && selectedCargoId">
+            No available drivers found for this location.
+          </small>
         </div>
 
         <!-- Select Customer -->
@@ -40,10 +49,9 @@
           </select>
         </div>
 
-        <button
-          class="btn btn-dark w-100"
-          (click)="assign()"
-          [disabled]="!selectedCargoId || !selectedDriverId || !selectedCustomerId">
+        <button class="btn btn-dark w-100"
+                (click)="assign()"
+                [disabled]="!selectedCargoId || !selectedDriverId || !selectedCustomerId">
           Assign Cargo
         </button>
 
@@ -57,11 +65,7 @@
 
         <!-- ERROR -->
         <div class="mt-3" *ngIf="errorMessage">
-          <div class="alert alert-danger">
-            {{ errorMessage }}
-          </div>
-
-          <!-- ✅ Back to Dashboard button on error -->
+          <div class="alert alert-danger">{{ errorMessage }}</div>
           <button class="btn btn-outline-secondary w-100" (click)="goBack()">
             Back to Dashboard
           </button>
