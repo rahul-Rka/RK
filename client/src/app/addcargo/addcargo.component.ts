@@ -5,7 +5,8 @@ import { HttpService } from '../../services/http.service';
 
 @Component({
   selector: 'app-addcargo',
-  templateUrl: './addcargo.component.html'
+  templateUrl: './addcargo.component.html',
+  styleUrls:['./addcargo.component.scss']
 })
 export class AddcargoComponent {
 
@@ -21,7 +22,6 @@ export class AddcargoComponent {
     this.itemForm = this.fb.group({
       content: ['', Validators.required],
       size: ['', Validators.required],
-      status: ['', Validators.required]
     });
   }
 

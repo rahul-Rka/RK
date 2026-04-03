@@ -4,7 +4,9 @@ import { HttpService } from '../../services/http.service';
 
 @Component({
   selector: 'app-viewcargostatus',
-  templateUrl: './viewcargostatus.component.html'
+  templateUrl: './viewcargostatus.component.html',
+  styleUrls:['./viewcargostatus.component.scss']
+  
 })
 export class ViewcargostatusComponent implements OnInit {
 

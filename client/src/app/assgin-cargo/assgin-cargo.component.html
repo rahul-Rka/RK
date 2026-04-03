@@ -1,55 +1,75 @@
 <!-- BUSINESS: assign cargo -->
 <ng-container *ngIf="role === 'BUSINESS'">
-  <div class="card p-4 shadow">
 
-    <!-- Select Cargo -->
-    <div class="mb-3">
-      <label class="form-label">Select Cargo</label>
-      <select class="form-select" [(ngModel)]="selectedCargoId">
-        <option [ngValue]="null">-- Select Cargo --</option>
-        <option *ngFor="let c of cargos" [ngValue]="c.id">
-          #{{ c.id }} — {{ c.content }} ({{ c.status }})
-        </option>
-      </select>
+  <!-- ✅ Wrapper for center + header spacing -->
+  <div class="assign-page">
+    <div class="assign-wrap">
+
+      <div class="card p-4 shadow assign-card">
+
+        <!-- Select Cargo -->
+        <div class="mb-3">
+          <label class="form-label">Select Cargo</label>
+          <select class="form-select" [(ngModel)]="selectedCargoId">
+            <option [ngValue]="null">-- Select Cargo --</option>
+            <option *ngFor="let c of cargos" [ngValue]="c.id">
+              #{{ c.id }} — {{ c.content }} ({{ c.status }})
+            </option>
+          </select>
+        </div>
+
+        <!-- Select Driver -->
+        <div class="mb-3">
+          <label class="form-label">Select Driver</label>
+          <select class="form-select" [(ngModel)]="selectedDriverId">
+            <option [ngValue]="null">-- Select Driver --</option>
+            <option *ngFor="let d of drivers" [ngValue]="d.id">
+              #{{ d.id }} — {{ d.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Select Customer -->
+        <div class="mb-3">
+          <label class="form-label">Select Customer</label>
+          <select class="form-select" [(ngModel)]="selectedCustomerId">
+            <option [ngValue]="null">-- Select Customer --</option>
+            <option *ngFor="let c of customers" [ngValue]="c.id">
+              #{{ c.id }} — {{ c.name }}
+            </option>
+          </select>
+        </div>
+
+        <button
+          class="btn btn-dark w-100"
+          (click)="assign()"
+          [disabled]="!selectedCargoId || !selectedDriverId || !selectedCustomerId">
+          Assign Cargo
+        </button>
+
+        <!-- SUCCESS -->
+        <div class="mt-3" *ngIf="successMessage">
+          <div class="alert alert-success mb-0">
+            {{ successMessage }}
+            <div class="small text-muted mt-1">Redirecting to dashboard...</div>
+          </div>
+        </div>
+
+        <!-- ERROR -->
+        <div class="mt-3" *ngIf="errorMessage">
+          <div class="alert alert-danger">
+            {{ errorMessage }}
+          </div>
+
+          <!-- ✅ Back to Dashboard button on error -->
+          <button class="btn btn-outline-secondary w-100" (click)="goBack()">
+            Back to Dashboard
+          </button>
+        </div>
+
+      </div>
+
     </div>
-
-    <!-- Select Driver -->
-    <div class="mb-3">
-      <label class="form-label">Select Driver</label>
-      <select class="form-select" [(ngModel)]="selectedDriverId">
-        <option [ngValue]="null">-- Select Driver --</option>
-        <option *ngFor="let d of drivers" [ngValue]="d.id">
-          #{{ d.id }} — {{ d.name }}
-        </option>
-      </select>
-    </div>
-
-    <!-- ✅ Select Customer -->
-    <div class="mb-3">
-      <label class="form-label">Select Customer</label>
-      <select class="form-select" [(ngModel)]="selectedCustomerId">
-        <option [ngValue]="null">-- Select Customer --</option>
-        <option *ngFor="let c of customers" [ngValue]="c.id">
-          #{{ c.id }} — {{ c.name }}
-        </option>
-      </select>
-    </div>
-
-    <button
-      class="btn btn-dark w-100"
-      (click)="assign()"
-      [disabled]="!selectedCargoId || !selectedDriverId || !selectedCustomerId">
-      Assign Cargo
-    </button>
-
-    <div class="mt-3" *ngIf="successMessage">
-      <div class="alert alert-success">{{ successMessage }}</div>
-    </div>
-
-    <div class="mt-3" *ngIf="errorMessage">
-      <div class="alert alert-danger">{{ errorMessage }}</div>
-    </div>
-
   </div>
+
 </ng-container>
-``

@@ -6,25 +6,26 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpService } from '../../services/http.service';
-
+ 
 @Component({
   selector: 'app-registration',
-  templateUrl: './registration.component.html'
+  templateUrl: './registration.component.html',
+  styleUrls:['./registration.component.scss']
 })
 export class RegistrationComponent {
-
+ 
   itemForm: FormGroup;
   registerSuccess = false;
   errorMessage = '';
-
+ 
   constructor(
     private fb: FormBuilder,
     private service: HttpService,
     private router: Router
   ) {
-
+ 
     this.itemForm = this.fb.group({
-
+ 
       username: [
         '',
         [
@@ -33,7 +34,7 @@ export class RegistrationComponent {
           Validators.pattern('^[a-zA-Z0-9]+$')
         ]
       ],
-
+ 
       password: [
         '',
         [
@@ -44,7 +45,7 @@ export class RegistrationComponent {
           )
         ]
       ],
-
+ 
       email: [
         '',
         [
@@ -52,30 +53,30 @@ export class RegistrationComponent {
           Validators.email
         ]
       ],
-
+ 
       role: [
         '',
         Validators.required
       ]
     });
   }
-
+ 
   /* ===== REGISTER ===== */
   register() {
     if (this.itemForm.valid) {
-
+ 
       this.errorMessage = '';
-
+ 
       this.service.registerUser(this.itemForm.value).subscribe({
         next: () => {
           this.registerSuccess = true;
-
+ 
           setTimeout(() => {
             this.registerSuccess = false;
             this.router.navigate(['/login']);
           }, 1500);
         },
-
+ 
         error: (err) => {
           if (typeof err.error === 'string') {
             this.errorMessage = err.error;
@@ -83,9 +84,9 @@ export class RegistrationComponent {
             this.errorMessage = err.error?.message || 'Registration failed';
           }
         }
-
+ 
       });
-
+ 
     } else {
       this.itemForm.markAllAsTouched();
     }

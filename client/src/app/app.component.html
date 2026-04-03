@@ -11,9 +11,6 @@
 
     <ng-container *ngIf="IsLoggin">
       <a class="nav-link text-white" routerLink="/dashboard">Dashboard</a>
-      <a class="nav-link text-white" routerLink="/addcargo">Add Cargo</a>
-      <a class="nav-link text-white" routerLink="/asgin-cargo">Assign Cargo</a>
-      <a class="nav-link text-white" routerLink="/viewcargostatus">View Status</a>
       <span class="badge bg-secondary">{{ roleName }}</span>
       <a class="nav-link text-white" style="cursor:pointer" (click)="logout()">
         Logout

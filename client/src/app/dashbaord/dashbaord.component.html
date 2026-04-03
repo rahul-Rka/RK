@@ -1,99 +1,130 @@
-<div class="container mt-4">
+<div class="container mt-4 dashboard">
 
   <!-- ================= BUSINESS DASHBOARD ================= -->
   <ng-container *ngIf="role === 'BUSINESS'">
-    <h2 class="mb-4">Business Dashboard</h2>
+    <h2 class="page-title mb-4">Business Dashboard</h2>
 
-    <div class="row g-3 mb-4">
+    <div class="row g-3 mb-4 stats-row">
       <div class="col-md-4">
-        <div class="card text-white bg-primary p-3 text-center">
-          <h5>Total Cargo</h5>
-          <h2>{{ cargos.length }}</h2>
+        <div class="stat-card">
+          <div class="stat-top">
+            <div>
+              <div class="stat-label">Total Cargo</div>
+              <div class="stat-value">{{ cargos.length }}</div>
+            </div>
+            <div class="stat-icon accent-blue">📦</div>
+          </div>
+          <div class="stat-foot accent-line-blue"></div>
         </div>
       </div>
 
       <div class="col-md-4">
-        <div class="card text-white bg-success p-3 text-center">
-          <h5>Total Drivers</h5>
-          <h2>{{ drivers.length }}</h2>
+        <div class="stat-card">
+          <div class="stat-top">
+            <div>
+              <div class="stat-label">Total Drivers</div>
+              <div class="stat-value">{{ drivers.length }}</div>
+            </div>
+            <div class="stat-icon accent-green">🚚</div>
+          </div>
+          <div class="stat-foot accent-line-green"></div>
         </div>
       </div>
 
       <div class="col-md-4">
-        <div class="card text-white bg-warning p-3 text-center">
-          <h5>Quick Actions</h5>
-          <a routerLink="/add-cargo" class="btn btn-light btn-sm mt-1">Add Cargo</a>
-          <a routerLink="/assign-cargo" class="btn btn-light btn-sm mt-1">Assign Cargo</a>
+        <div class="stat-card">
+          <div class="stat-top">
+            <div>
+              <div class="stat-label">Quick Actions</div>
+              <div class="stat-actions">
+                <a routerLink="/add-cargo" class="action-btn">Add Cargo</a>
+                <a routerLink="/assign-cargo" class="action-btn outline">Assign Cargo</a>
+              </div>
+            </div>
+            <div class="stat-icon accent-amber">⚡</div>
+          </div>
+          <div class="stat-foot accent-line-amber"></div>
         </div>
       </div>
     </div>
 
-    <h4>All Cargo</h4>
-    <table class="table table-bordered table-striped">
-      <thead class="table-dark">
-        <tr>
-          <th>ID</th>
-          <th>Content</th>
-          <th>Size</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let c of cargos">
-          <td>{{ c.id }}</td>
-          <td>{{ c.content }}</td>
-          <td>{{ c.size }}</td>
-          <td><span class="badge bg-info">{{ c.status }}</span></td>
-        </tr>
-        <tr *ngIf="cargos.length === 0">
-          <td colspan="4" class="text-center">No cargo found</td>
-        </tr>
-      </tbody>
-    </table>
+    <h4 class="section-title">All Cargo</h4>
+
+    <div class="table-card">
+      <table class="table app-table">
+        <thead>
+          <tr>
+            <th style="width: 80px;">ID</th>
+            <th>Content</th>
+            <th style="width: 140px;">Size</th>
+            <th style="width: 160px;">Status</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let c of cargos">
+            <td>{{ c.id }}</td>
+            <td>{{ c.content }}</td>
+            <td>{{ c.size }}</td>
+            <td>
+              <span class="status-pill">{{ c.status }}</span>
+            </td>
+          </tr>
+
+          <tr *ngIf="cargos.length === 0">
+            <td colspan="4" class="empty-state">No cargo found</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </ng-container>
 
   <!-- ================= DRIVER DASHBOARD ================= -->
   <ng-container *ngIf="role === 'DRIVER'">
-    <h2 class="mb-4">Driver Dashboard</h2>
+    <h2 class="page-title mb-4">Driver Dashboard</h2>
 
-    <table class="table table-bordered table-striped">
-      <thead class="table-dark">
-        <tr>
-          <th>ID</th>
-          <th>Content</th>
-          <th>Size</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let c of assignedCargos">
-          <td>{{ c.id }}</td>
-          <td>{{ c.content }}</td>
-          <td>{{ c.size }}</td>
-          <td><span class="badge bg-warning text-dark">{{ c.status }}</span></td>
-          <td>
-            <button class="btn btn-sm btn-primary" (click)="goToViewCargo()">
-              Update Status
-            </button>
-          </td>
-        </tr>
-        <tr *ngIf="assignedCargos.length === 0">
-          <td colspan="5" class="text-center">No assigned cargo</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-card">
+      <table class="table app-table">
+        <thead>
+          <tr>
+            <th style="width: 80px;">ID</th>
+            <th>Content</th>
+            <th style="width: 140px;">Size</th>
+            <th style="width: 160px;">Status</th>
+            <th style="width: 170px;">Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let c of assignedCargos">
+            <td>{{ c.id }}</td>
+            <td>{{ c.content }}</td>
+            <td>{{ c.size }}</td>
+            <td><span class="status-pill warn">{{ c.status }}</span></td>
+            <td>
+              <button class="btn btn-sm btn-app" (click)="goToViewCargo()">
+                Update Status
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="assignedCargos.length === 0">
+            <td colspan="5" class="empty-state">No assigned cargo</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </ng-container>
 
   <!-- ================= CUSTOMER DASHBOARD ================= -->
   <ng-container *ngIf="role === 'CUSTOMER'">
-    <h2 class="mb-4">Customer Dashboard</h2>
+    <h2 class="page-title mb-4">Customer Dashboard</h2>
 
-    <div class="card p-4 shadow text-center" style="max-width: 500px; margin: auto;">
-      <h5>Your Cargo Status</h5>
-      <p class="text-muted">View all cargos assigned to you.</p>
+    <div class="customer-card">
+      <div class="customer-title">Your Cargo Status</div>
+      <div class="customer-sub">View all cargos assigned to you.</div>
 
-      <button class="btn btn-dark mt-3" (click)="goToViewCargo()">
+      <button class="btn btn-app mt-3" (click)="goToViewCargo()">
         View My Cargos
       </button>
     </div>

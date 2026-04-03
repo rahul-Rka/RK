@@ -1,114 +1,117 @@
-<div class="container d-flex justify-content-center mt-5">
+<div class="login-container">
+<!-- LEFT: LOGISTICS VISUAL -->
+<div class="visual-section">
+<div class="flow-layer"></div>
+ 
+<div class="flow-text">
+<div class="flow-main">
+ 
+        BUSINESS <span>→</span> DRIVER <span>→</span> CUSTOMER
+</div>
+<div class="flow-sub">
+ 
+        Pickup <span>•</span> In Transit <span>•</span> Delivered
+</div>
+</div>
+</div>
+<!-- RIGHT: LOGIN CARD -->
+<div class="form-section">
 <div class="card p-4 shadow" style="width:420px;">
 <h4 class="text-center fw-bold">LOGISTIC MANAGEMENT SYSTEM</h4>
 <p class="text-center text-muted">
-
-      Please enter your user and password!
+ 
+        Please enter your user and password!
 </p>
- 
-    <form [formGroup]="itemForm" (ngSubmit)="login()">
- 
-      <!-- USERNAME -->
+<form [formGroup]="itemForm" (ngSubmit)="login()">
+<!-- USERNAME -->
 <div class="mb-3">
 <label class="form-label">Username</label>
-<input
-
-          type="text"
-
-          class="form-control"
-
-          formControlName="username"
-
-        />
+<input type="text"
  
-        <small class="text-danger"
-
-          *ngIf="itemForm.controls['username'].touched && itemForm.controls['username'].errors">
+                 class="form-control"
  
-          <span *ngIf="itemForm.controls['username'].errors?.['required']">
-
-            Username is required
+                 formControlName="username" />
+<small class="text-danger"
+ 
+                 *ngIf="itemForm.controls['username'].touched &&
+ 
+                        itemForm.controls['username'].errors">
+<span *ngIf="itemForm.controls['username'].errors?.['required']">
+ 
+              Username is required
 </span><br>
+<span *ngIf="itemForm.controls['username'].errors?.['minlength']">
  
-          <span *ngIf="itemForm.controls['username'].errors?.['minlength']">
-
-            Username must be at least 4 characters
+              Username must be at least 4 characters
 </span><br>
+<span *ngIf="itemForm.controls['username'].errors?.['pattern']">
  
-          <span *ngIf="itemForm.controls['username'].errors?.['pattern']">
-
-            Only letters and numbers are allowed
+              Only letters and numbers are allowed
 </span>
 </small>
 </div>
- 
-      <!-- PASSWORD -->
+<!-- PASSWORD -->
 <div class="mb-3">
 <label class="form-label">Password</label>
-<input
-
-          type="password"
-
-          class="form-control"
-
-          formControlName="password"
-
-          placeholder="Password"
-
-        />
+<input type="password"
  
-        <small class="text-danger"
-
-          *ngIf="itemForm.controls['password'].touched && itemForm.controls['password'].errors">
+                 class="form-control"
  
-          <span *ngIf="itemForm.controls['password'].errors?.['required']">
-
-            Password is required
+                 formControlName="password"
+ 
+                 placeholder="Password" />
+<small class="text-danger"
+ 
+                 *ngIf="itemForm.controls['password'].touched &&
+ 
+                        itemForm.controls['password'].errors">
+<span *ngIf="itemForm.controls['password'].errors?.['required']">
+ 
+              Password is required
 </span><br>
+<span *ngIf="itemForm.controls['password'].errors?.['minlength']">
  
-          <span *ngIf="itemForm.controls['password'].errors?.['minlength']">
-
-            Password must be at least 8 characters
+              Password must be at least 8 characters
 </span><br>
+<span *ngIf="itemForm.controls['password'].errors?.['pattern']">
  
-          <span *ngIf="itemForm.controls['password'].errors?.['pattern']">
-
-            Password must contain letters, numbers and one special character
+              Password must contain letters, numbers and one special character
 </span>
 </small>
 </div>
+<button type="submit"
  
-      <button
-
-        type="submit"
-
-        class="btn btn-outline-dark w-100"
-
-        [disabled]="itemForm.invalid">
-
-        Login
+                class="btn btn-outline-dark w-100"
+ 
+                [disabled]="itemForm.invalid">
+ 
+          Login
 </button>
+<p class="text-center mt-3">
  
-      <p class="text-center mt-3">
-
-        Don't have an account?
+          Don't have an account?
 <a routerLink="/registration"><strong>Registration</strong></a>
 </p>
- 
-    </form>
+</form>
 </div>
 </div>
- 
+</div>
 <!-- LOGIN ERROR -->
 <div *ngIf="loginError"
-
+ 
      style="position:fixed; inset:0; background:rgba(0,0,0,0.5);
-
+ 
             display:flex; align-items:center; justify-content:center; z-index:1000;">
-<div style="background:white; padding:25px; width:320px; border-radius:6px; text-align:center;">
+<div style="background:white; padding:25px; width:320px;
+ 
+              border-radius:6px; text-align:center;">
 <h5 style="color:#dc3545;">Login Failed</h5>
 <p>Invalid username or password.</p>
-<button class="btn btn-danger w-100" (click)="loginError=false">OK</button>
+<button class="btn btn-danger w-100"
+ 
+            (click)="loginError=false">
+ 
+      OK
+</button>
 </div>
 </div>
-  

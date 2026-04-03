@@ -4,18 +4,19 @@ import { HttpService } from '../../services/http.service';
 
 @Component({
   selector: 'app-assgin-cargo',
-  templateUrl: './assgin-cargo.component.html'
+  templateUrl: './assgin-cargo.component.html',
+  styleUrls: ['./assgin-cargo.component.scss']  // ✅ add this
 })
 export class AssginCargoComponent implements OnInit {
 
   cargos: any[] = [];
   drivers: any[] = [];
-  customers: any[] = [];          // ✅ NEW
+  customers: any[] = [];
   assignedCargos: any[] = [];
 
   selectedCargoId: number | null = null;
   selectedDriverId: number | null = null;
-  selectedCustomerId: number | null = null; // ✅ NEW
+  selectedCustomerId: number | null = null;
 
   successMessage = '';
   errorMessage = '';
@@ -27,25 +28,13 @@ export class AssginCargoComponent implements OnInit {
     this.role = localStorage.getItem('role') || '';
 
     if (this.role === 'BUSINESS') {
-
-      this.service.getCargo().subscribe(data => {
-        this.cargos = data as any[];
-      });
-
-      this.service.getDrivers().subscribe(data => {
-        this.drivers = data as any[];
-      });
-
-      // ✅ LOAD CUSTOMERS
-      this.service.getCustomers().subscribe(data => {
-        this.customers = data as any[];
-      });
+      this.service.getCargo().subscribe(data => this.cargos = data as any[]);
+      this.service.getDrivers().subscribe(data => this.drivers = data as any[]);
+      this.service.getCustomers().subscribe(data => this.customers = data as any[]);
     }
 
     if (this.role === 'DRIVER') {
-      this.service.getAssignOrders().subscribe(data => {
-        this.assignedCargos = data as any[];
-      });
+      this.service.getAssignOrders().subscribe(data => this.assignedCargos = data as any[]);
     }
   }
 
@@ -64,6 +53,11 @@ export class AssginCargoComponent implements OnInit {
           this.selectedCargoId = null;
           this.selectedDriverId = null;
           this.selectedCustomerId = null;
+
+          // ✅ Auto navigate after showing success message
+          setTimeout(() => {
+            this.router.navigate(['/dashboard']);
+          }, 1200);
         },
         error: () => {
           this.errorMessage = 'Failed to assign cargo.';
