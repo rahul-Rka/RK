@@ -3,6 +3,7 @@ com/edutech/logisticsmanagementandtrackingsystem/service/BusinessService.class
 com/edutech/logisticsmanagementandtrackingsystem/repository/CustomerRepository.class
 com/edutech/logisticsmanagementandtrackingsystem/entity/Customer.class
 com/edutech/logisticsmanagementandtrackingsystem/repository/CargoRepository.class
+com/edutech/logisticsmanagementandtrackingsystem/service/PendingLoginStore.class
 com/edutech/logisticsmanagementandtrackingsystem/service/UserService.class
 com/edutech/logisticsmanagementandtrackingsystem/service/BusinessService$DriverStats.class
 com/edutech/logisticsmanagementandtrackingsystem/entity/Business.class
@@ -13,6 +14,8 @@ com/edutech/logisticsmanagementandtrackingsystem/service/CargoService.class
 com/edutech/logisticsmanagementandtrackingsystem/repository/UserRepository.class
 com/edutech/logisticsmanagementandtrackingsystem/entity/User.class
 com/edutech/logisticsmanagementandtrackingsystem/entity/Driver.class
+com/edutech/logisticsmanagementandtrackingsystem/Controller/GmailController.class
+com/edutech/logisticsmanagementandtrackingsystem/service/GmailServices$OtpSession.class
 com/edutech/logisticsmanagementandtrackingsystem/jwt/JwtRequestFilter.class
 com/edutech/logisticsmanagementandtrackingsystem/config/Configurations.class
 com/edutech/logisticsmanagementandtrackingsystem/Controller/RegisterAndLoginController.class
@@ -24,6 +27,8 @@ com/edutech/logisticsmanagementandtrackingsystem/Controller/CustomerController.c
 com/edutech/logisticsmanagementandtrackingsystem/dto/LoginResponse.class
 com/edutech/logisticsmanagementandtrackingsystem/service/CustomerService.class
 com/edutech/logisticsmanagementandtrackingsystem/jwt/JwtUtil.class
+com/edutech/logisticsmanagementandtrackingsystem/service/PendingLoginStore$PendingLogin.class
 com/edutech/logisticsmanagementandtrackingsystem/config/SecurityConfig.class
+com/edutech/logisticsmanagementandtrackingsystem/service/GmailServices.class
 com/edutech/logisticsmanagementandtrackingsystem/entity/Cargo.class
 com/edutech/logisticsmanagementandtrackingsystem/dto/LoginRequest.class

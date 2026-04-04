@@ -65,8 +65,8 @@
           <a href="#" class="forgot-link" (click)="openForgot($event)">Forgot password?</a>
         </p>
 
-        <button type="submit" class="btn btn-outline-dark w-100" [disabled]="itemForm.invalid">
-          Login
+        <button type="submit" class="btn btn-outline-dark w-100" [disabled]="itemForm.invalid || loginLoading">
+          {{ loginLoading ? 'Logging in...' : 'Login' }}
         </button>
 
         <p class="text-center mt-3">
@@ -85,8 +85,51 @@
             display:flex; align-items:center; justify-content:center; z-index:1000;">
   <div style="background:white; padding:25px; width:320px; border-radius:6px; text-align:center;">
     <h5 style="color:#dc3545;">Login Failed</h5>
-    <p>Invalid username or password.</p>
+    <p>{{ message || 'Invalid username or password.' }}</p>
     <button class="btn btn-danger w-100" (click)="loginError=false">OK</button>
+  </div>
+</div>
+
+<!-- ✅ OTP MODAL -->
+<div *ngIf="showOtpModal"
+     style="position:fixed; inset:0; background:rgba(0,0,0,0.5);
+            display:flex; align-items:center; justify-content:center; z-index:1100;">
+  <div style="background:white; padding:25px; width:360px; border-radius:6px;">
+    <h5 class="text-center fw-bold">OTP Verification</h5>
+    <p class="text-muted text-center" style="margin-bottom: 12px;">
+      {{ message || 'OTP sent to your registered email. Enter OTP to continue.' }}
+    </p>
+
+    <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()">
+      <label class="form-label">Enter OTP</label>
+      <input type="text"
+             class="form-control"
+             formControlName="otp"
+             maxlength="6"
+             placeholder="Enter 6 digit OTP" />
+
+      <small class="text-danger"
+             *ngIf="otpForm.controls['otp'].touched && otpForm.controls['otp'].invalid">
+        OTP must be 6 digits
+      </small>
+
+      <div class="alert alert-success mt-3" *ngIf="otpSuccess">OTP Verified ✅</div>
+      <div class="alert alert-danger mt-3" *ngIf="otpError">{{ message || 'Invalid OTP' }}</div>
+
+      <div class="d-flex gap-2 mt-3">
+        <button type="submit" class="btn btn-success flex-fill" [disabled]="otpLoading">
+          {{ otpLoading ? 'Verifying...' : 'Verify' }}
+        </button>
+
+        <button type="button" class="btn btn-outline-secondary flex-fill" (click)="resendOtp()" [disabled]="otpLoading">
+          Resend
+        </button>
+      </div>
+
+      <button type="button" class="btn btn-outline-dark w-100 mt-2" (click)="cancelOtp()" [disabled]="otpLoading">
+        Cancel
+      </button>
+    </form>
   </div>
 </div>
 
@@ -119,10 +162,7 @@
         Passwords do not match
       </small>
 
-      <!-- BACKEND ERROR -->
       <div class="alert alert-danger mt-3" *ngIf="forgotError">{{ forgotError }}</div>
-
-      <!-- BACKEND SUCCESS -->
       <div class="alert alert-success mt-3" *ngIf="forgotSuccess">{{ forgotSuccess }}</div>
 
       <div class="fp-actions">

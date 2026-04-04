@@ -9,6 +9,7 @@ import com.edutech.logisticsmanagementandtrackingsystem.repository.BusinessRepos
 import com.edutech.logisticsmanagementandtrackingsystem.repository.CustomerRepository;
 import com.edutech.logisticsmanagementandtrackingsystem.repository.DriverRepository;
 import com.edutech.logisticsmanagementandtrackingsystem.repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -47,23 +48,17 @@ public class UserService implements UserDetailsService {
     @Transactional
     public User registerUser(User user) {
 
-        // ✅ BACKEND VALIDATION – DUPLICATE USERNAME
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already exists");
         }
 
-        // ✅ BACKEND VALIDATION – DUPLICATE EMAIL
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exists");
         }
 
-        // 🔐 Encode password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        // ✅ Save USER
         User savedUser = userRepository.save(user);
 
-        // ✅ Save role‑specific entity
         String role = savedUser.getRole() == null ? "" : savedUser.getRole().toUpperCase();
 
         switch (role) {
@@ -89,7 +84,6 @@ public class UserService implements UserDetailsService {
                 break;
 
             default:
-                // If some other role comes, just ignore role-specific table
                 break;
         }
 
@@ -97,7 +91,7 @@ public class UserService implements UserDetailsService {
     }
 
     /* =========================
-       ✅ LOGIN USER
+       ✅ LOGIN USER (STEP-1 will call this then OTP)
        ========================= */
     public Map<String, Object> loginUser(Map<String, String> req) {
 
@@ -130,7 +124,6 @@ public class UserService implements UserDetailsService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New password required");
         }
 
-        // ✅ Use ignore-case search if your repo supports it
         User user = userRepository.findByEmailIgnoreCase(email);
 
         if (user == null) {
@@ -139,6 +132,15 @@ public class UserService implements UserDetailsService {
 
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+    }
+
+    /* =========================
+       ✅ OTP Support: Get email by username
+       ========================= */
+    public String getEmailByUsername(String username) {
+        User u = userRepository.findByUsername(username);
+        if (u == null) throw new RuntimeException("User not found: " + username);
+        return u.getEmail();
     }
 
     /* =========================
@@ -153,9 +155,6 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found");
         }
 
-        // ✅ Make authorities compatible with both styles:
-        // - "DRIVER" (your current)
-        // - "ROLE_DRIVER" (Spring recommended)
         String role = user.getRole() == null ? "USER" : user.getRole().toUpperCase();
 
         List<SimpleGrantedAuthority> authorities = Arrays.asList(

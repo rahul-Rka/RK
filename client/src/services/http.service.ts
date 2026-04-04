@@ -13,7 +13,7 @@ export class HttpService {
      HEADERS
      =============================== */
 
-  // Public endpoints (login/register/reset) - NO token
+  // Public endpoints (login/register/reset/verify-otp) - NO token
   private jsonHeaders() {
     return {
       headers: new HttpHeaders({
@@ -37,9 +37,19 @@ export class HttpService {
      AUTH (PUBLIC)
      =============================== */
 
+  // STEP-1 login (returns otpRequired + challengeId)
   Login(data: any) {
     return this.http.post(
       `${this.serverName}/api/login`,
+      data,
+      this.jsonHeaders()
+    );
+  }
+
+  // STEP-2 verify otp (returns token + role)
+  verifyOtp(data: { challengeId: string; otp: string }) {
+    return this.http.post(
+      `${this.serverName}/api/verify-otp`,
       data,
       this.jsonHeaders()
     );
@@ -53,7 +63,7 @@ export class HttpService {
     );
   }
 
-  // ✅ Forgot Password / Reset Password (email-based)
+  // Forgot Password / Reset Password (email-based)
   resetPassword(data: any) {
     return this.http.post(
       `${this.serverName}/api/reset-password`,
@@ -81,11 +91,8 @@ export class HttpService {
     );
   }
 
-  /**
-   * ✅ MERGED:
-   * Backend supports optional query param:
-   * GET /api/business/drivers?location=...
-   */
+  // Backend supports optional query param:
+  // GET /api/business/drivers?location=...
   getDrivers(location?: string) {
     const url = location && location.trim().length > 0
       ? `${this.serverName}/api/business/drivers?location=${encodeURIComponent(location.trim())}`
@@ -94,10 +101,7 @@ export class HttpService {
     return this.http.get(url, this.authHeaders());
   }
 
-  /**
-   * ✅ Backward-compatible method used in your component:
-   * Now maps to backend route /api/business/drivers?location=...
-   */
+  // Backward-compatible method used in your assign-cargo component
   getDriversByLocation(location: string) {
     return this.getDrivers(location);
   }
@@ -109,6 +113,7 @@ export class HttpService {
     );
   }
 
+  // ✅ IMPORTANT: use '&' in TypeScript (not '&amp;')
   assignCargo(cargoId: number, driverId: number, customerId: number) {
     return this.http.post(
       `${this.serverName}/api/business/assign-cargo?cargoId=${cargoId}&driverId=${driverId}&customerId=${customerId}`,
@@ -117,7 +122,7 @@ export class HttpService {
     );
   }
 
-  // ✅ BUSINESS: feedback list and summary (from friend)
+  // BUSINESS: feedback list and summary
   getAllFeedbacks() {
     return this.http.get(
       `${this.serverName}/api/business/feedbacks`,
@@ -143,6 +148,7 @@ export class HttpService {
     );
   }
 
+  // ✅ IMPORTANT: use '&' in TypeScript (not '&amp;')
   updateCargoStatus(cargoId: number, newStatus: string) {
     return this.http.put(
       `${this.serverName}/api/driver/update-cargo-status?cargoId=${cargoId}&newStatus=${encodeURIComponent(newStatus)}`,
@@ -151,7 +157,6 @@ export class HttpService {
     );
   }
 
-  // ✅ Existing methods you needed earlier (kept)
   toggleAvailability() {
     return this.http.put(
       `${this.serverName}/api/driver/toggle-availability`,
@@ -179,7 +184,7 @@ export class HttpService {
     );
   }
 
-  // ✅ CUSTOMER: submit feedback (stored in Cargo table)
+  // CUSTOMER: submit feedback
   submitFeedback(cargoId: number, rating: number, comment: string) {
     return this.http.post(
       `${this.serverName}/api/customer/submit-feedback?cargoId=${cargoId}`,

@@ -12,17 +12,27 @@ import { AuthService } from '../../services/auth.service';
 export class LoginComponent {
 
   itemForm: FormGroup;
+  otpForm: FormGroup;
+
+  // login state
   loginError = false;
-  loginSuccess = false;
+  loginLoading = false;
+  message = '';
 
   showPassword = false;
 
+  // OTP state
+  showOtpModal = false;
+  otpLoading = false;
+  otpError = false;
+  otpSuccess = false;
+  private challengeId = '';
+
+  // forgot password state
   showForgotModal = false;
   resetLoading = false;
-
   forgotSuccess = '';
   forgotError = '';
-
   forgotForm: FormGroup;
 
   constructor(
@@ -41,9 +51,13 @@ export class LoginComponent {
       password: ['', [
         Validators.required,
         Validators.minLength(8),
-        // ✅ TS regex MUST use '&' not '&amp;'
+        // ✅ TypeScript regex must use '&' (NOT '&amp;')
         Validators.pattern('^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[@$!%*#?&^])[A-Za-z0-9@$!%*#?&^]{8,}$')
       ]]
+    });
+
+    this.otpForm = this.fb.group({
+      otp: ['', [Validators.required, Validators.pattern('^[0-9]{6}$')]]
     });
 
     this.forgotForm = this.fb.group({
@@ -58,7 +72,7 @@ export class LoginComponent {
 
   }
 
-  /* ================= LOGIN ================= */
+  /* ================= LOGIN (STEP-1) ================= */
   login(): void {
     if (!this.itemForm.valid) {
       this.itemForm.markAllAsTouched();
@@ -66,23 +80,131 @@ export class LoginComponent {
     }
 
     this.loginError = false;
+    this.message = '';
+    this.loginLoading = true;
 
     this.service.Login(this.itemForm.value).subscribe({
       next: (res: any) => {
-        this.authService.setToken(res.token);
-        this.authService.setRole(res.role);
-        this.authService.setLoginStatus(true);
+        this.loginLoading = false;
 
-        this.loginSuccess = true;
-        setTimeout(() => {
-          this.loginSuccess = false;
-          this.router.navigateByUrl('/dashboard');
-        }, 500);
+        // If backend still returns token directly (backward compatibility)
+        if (res && res.token) {
+          this.finalizeLogin(res.token, res.role);
+          return;
+        }
+
+        // OTP flow response
+        if (res?.otpRequired === true || res?.challengeId) {
+          this.challengeId = res?.challengeId || '';
+          this.showOtpModal = true;
+          this.otpError = false;
+          this.otpSuccess = false;
+          this.otpForm.reset();
+          this.message = 'OTP sent to your registered email. Please enter OTP to continue.';
+          return;
+        }
+
+        // Unexpected response
+        this.loginError = true;
+        this.message = 'Login response invalid. Please try again.';
       },
       error: () => {
+        this.loginLoading = false;
         this.loginError = true;
+        this.message = 'Invalid username or password.';
       }
     });
+  }
+
+  /* ================= OTP (STEP-2) ================= */
+  verifyOtp(): void {
+    if (!this.otpForm.valid) {
+      this.otpForm.markAllAsTouched();
+      this.otpError = true;
+      this.message = 'Enter a valid 6 digit OTP.';
+      return;
+    }
+
+    this.otpLoading = true;
+    this.otpError = false;
+    this.otpSuccess = false;
+
+    const otpValue = (this.otpForm.value.otp || '').trim();
+
+    this.service.verifyOtp({ challengeId: this.challengeId, otp: otpValue }).subscribe({
+      next: (res: any) => {
+        this.otpLoading = false;
+
+        if (res && res.token) {
+          this.otpSuccess = true;
+          this.message = 'OTP verified. Logging in...';
+          this.finalizeLogin(res.token, res.role);
+          return;
+        }
+
+        this.otpError = true;
+        this.message = res?.message || 'OTP verified but token missing. Check backend response.';
+      },
+      error: (err: any) => {
+        this.otpLoading = false;
+        this.otpError = true;
+        this.message = err?.error?.message || 'Invalid or expired OTP.';
+      }
+    });
+  }
+
+  // ✅ Resend OTP (re-trigger login step-1 again using same credentials)
+  resendOtp(): void {
+    // resend by calling /api/login again (backend generates new challengeId + OTP)
+    if (!this.itemForm.valid) {
+      this.itemForm.markAllAsTouched();
+      return;
+    }
+
+    this.otpLoading = true;
+    this.otpError = false;
+    this.otpSuccess = false;
+
+    this.service.Login(this.itemForm.value).subscribe({
+      next: (res: any) => {
+        this.otpLoading = false;
+
+        if (res?.challengeId) {
+          this.challengeId = res.challengeId;
+          this.message = 'OTP resent successfully. Please check your email.';
+          return;
+        }
+
+        this.message = 'OTP resent. Please check your email.';
+      },
+      error: () => {
+        this.otpLoading = false;
+        this.otpError = true;
+        this.message = 'Failed to resend OTP.';
+      }
+    });
+  }
+
+  cancelOtp(): void {
+    this.showOtpModal = false;
+    this.challengeId = '';
+    this.otpForm.reset();
+    this.otpError = false;
+    this.otpSuccess = false;
+    this.message = '';
+  }
+
+  private finalizeLogin(token: string, role?: string): void {
+    this.authService.setToken(token);
+    if (role) this.authService.setRole(role);
+    this.authService.setLoginStatus(true);
+
+    // close otp modal if open
+    this.showOtpModal = false;
+
+    setTimeout(() => {
+      this.router.navigateByUrl('/dashboard');
+    }, 300);
   }
 
   togglePassword(): void {

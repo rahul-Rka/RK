@@ -8,13 +8,17 @@ import { DashbaordComponent } from './dashbaord/dashbaord.component';
 import { AssginCargoComponent } from './assgin-cargo/assgin-cargo.component';
 import { ViewcargostatusComponent } from './viewcargostatus/viewcargostatus.component';
 
+import { AuthGuard } from './guards/auth.guard';
+
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'registration', component: RegistrationComponent },
-  { path: 'dashboard', component: DashbaordComponent },
-  { path: 'add-cargo', component: AddcargoComponent },
-  { path: 'assign-cargo', component: AssginCargoComponent },
-  { path: 'view-cargo-status', component: ViewcargostatusComponent },
+
+  { path: 'dashboard', component: DashbaordComponent, canActivate: [AuthGuard] },
+  { path: 'add-cargo', component: AddcargoComponent, canActivate: [AuthGuard] },
+  { path: 'assign-cargo', component: AssginCargoComponent, canActivate: [AuthGuard] },
+  { path: 'view-cargo-status', component: ViewcargostatusComponent, canActivate: [AuthGuard] },
+
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', redirectTo: '/login' },
 ];
