@@ -53,7 +53,7 @@ export class HttpService {
     );
   }
 
-  // Reset Password (email-based)
+  // ✅ Forgot Password / Reset Password (email-based)
   resetPassword(data: any) {
     return this.http.post(
       `${this.serverName}/api/reset-password`,
@@ -81,11 +81,25 @@ export class HttpService {
     );
   }
 
-  getDrivers() {
-    return this.http.get(
-      `${this.serverName}/api/business/drivers`,
-      this.authHeaders()
-    );
+  /**
+   * ✅ MERGED:
+   * Backend supports optional query param:
+   * GET /api/business/drivers?location=...
+   */
+  getDrivers(location?: string) {
+    const url = location && location.trim().length > 0
+      ? `${this.serverName}/api/business/drivers?location=${encodeURIComponent(location.trim())}`
+      : `${this.serverName}/api/business/drivers`;
+
+    return this.http.get(url, this.authHeaders());
+  }
+
+  /**
+   * ✅ Backward-compatible method used in your component:
+   * Now maps to backend route /api/business/drivers?location=...
+   */
+  getDriversByLocation(location: string) {
+    return this.getDrivers(location);
   }
 
   getCustomers() {
@@ -103,16 +117,17 @@ export class HttpService {
     );
   }
 
-  /**
-   * ✅ MISSING METHOD #1 (Your Assign Cargo screen calls this)
-   * Returns drivers filtered by location.
-   *
-   * IMPORTANT: Endpoint must exist in backend.
-   * If your backend uses a different URL, tell me the mapping and I will adjust.
-   */
-  getDriversByLocation(location: string) {
+  // ✅ BUSINESS: feedback list and summary (from friend)
+  getAllFeedbacks() {
     return this.http.get(
-      `${this.serverName}/api/business/drivers-by-location?location=${encodeURIComponent(location)}`,
+      `${this.serverName}/api/business/feedbacks`,
+      this.authHeaders()
+    );
+  }
+
+  getFeedbackSummary() {
+    return this.http.get(
+      `${this.serverName}/api/business/feedback-summary`,
       this.authHeaders()
     );
   }
@@ -136,12 +151,7 @@ export class HttpService {
     );
   }
 
-  /**
-   * ✅ MISSING METHOD #2 (Dashboard calls this)
-   * Toggle driver availability (AVAILABLE / UNAVAILABLE)
-   *
-   * IMPORTANT: Endpoint must exist in backend.
-   */
+  // ✅ Existing methods you needed earlier (kept)
   toggleAvailability() {
     return this.http.put(
       `${this.serverName}/api/driver/toggle-availability`,
@@ -150,12 +160,6 @@ export class HttpService {
     );
   }
 
-  /**
-   * ✅ MISSING METHOD #3 (Dashboard calls this)
-   * Update driver location
-   *
-   * IMPORTANT: Endpoint must exist in backend.
-   */
   updateDriverLocation(location: string) {
     return this.http.put(
       `${this.serverName}/api/driver/update-location?location=${encodeURIComponent(location)}`,
@@ -171,6 +175,15 @@ export class HttpService {
   getCustomerCargos() {
     return this.http.get(
       `${this.serverName}/api/customer/cargo`,
+      this.authHeaders()
+    );
+  }
+
+  // ✅ CUSTOMER: submit feedback (stored in Cargo table)
+  submitFeedback(cargoId: number, rating: number, comment: string) {
+    return this.http.post(
+      `${this.serverName}/api/customer/submit-feedback?cargoId=${cargoId}`,
+      { rating, comment },
       this.authHeaders()
     );
   }

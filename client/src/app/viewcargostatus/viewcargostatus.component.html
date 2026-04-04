@@ -1,43 +1,141 @@
-<div class="container mt-4" style="max-width: 800px;">
+<div class="container mt-4" style="max-width: 980px;">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Cargo Dashboard</h2>
-    <button class="btn btn-outline-secondary" (click)="goBack()">← Back</button>
+    <div>
+      <h2>Cargo Dashboard</h2>
+      <small class="text-muted-lite" *ngIf="role === 'CUSTOMER'">
+        Live tracking (auto refresh every 5 seconds)
+      </small>
+    </div>
+
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-secondary" (click)="refresh()">↻ Refresh</button>
+      <button class="btn btn-outline-secondary" (click)="goBack()">← Back</button>
+    </div>
   </div>
 
-  <!-- ================= CUSTOMER DASHBOARD ================= -->
+  <!-- ================= CUSTOMER VIEW ================= -->
   <ng-container *ngIf="role === 'CUSTOMER'">
     <div class="card p-4 shadow">
-      <h5>Your Assigned Cargos</h5>
+      <h5>Your Cargos</h5>
 
-      <table class="table table-bordered table-striped mt-3">
-        <thead class="table-dark">
-          <tr>
-            <th>ID</th>
-            <th>Content</th>
-            <th>Size</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let c of cargos">
-            <td>{{ c.id }}</td>
-            <td>{{ c.content }}</td>
-            <td>{{ c.size }}</td>
-            <td>
+      <div *ngIf="cargos.length === 0" class="empty-state">
+        No cargos assigned to you yet.
+      </div>
+
+      <div class="cargo-block" *ngFor="let c of cargos">
+
+        <div class="cargo-top">
+          <div class="cargo-id">#{{ c.id }}</div>
+
+          <div class="cargo-pills">
+            <span class="meta-pill">Content: {{ c.content }}</span>
+            <span class="meta-pill">Size: {{ c.size }}</span>
+
+            <span class="meta-pill">
+              Status:
               <span class="badge bg-info text-dark">{{ c.status }}</span>
-            </td>
-          </tr>
-          <tr *ngIf="cargos.length === 0">
-            <td colspan="4" class="text-center">
-              No cargos assigned to you yet.
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            </span>
+
+            <span class="meta-pill" *ngIf="c.estimatedDeliveryDate">
+              EDD: <span class="edd">{{ c.estimatedDeliveryDate }}</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- ✅ Glow Stepper -->
+        <div class="tracker">
+          <div class="node" [class.active]="getStep(c) >= 1">
+            <div class="icon">🧾</div>
+            <div class="label">Ordered</div>
+          </div>
+
+          <div class="bar" [class.active]="getStep(c) >= 2"></div>
+
+          <div class="node" [class.active]="getStep(c) >= 2">
+            <div class="icon">📦</div>
+            <div class="label">Packed</div>
+          </div>
+
+          <div class="bar" [class.active]="getStep(c) >= 3"></div>
+
+          <div class="node" [class.active]="getStep(c) >= 3">
+            <div class="icon">🚚</div>
+            <div class="label">In Transit</div>
+          </div>
+
+          <div class="bar" [class.active]="getStep(c) >= 4"></div>
+
+          <div class="node" [class.active]="getStep(c) >= 4">
+            <div class="icon">🏠</div>
+            <div class="label">Delivered</div>
+          </div>
+        </div>
+
+        <div class="tracker-hint">
+          <span *ngIf="getStep(c) < 4">Tracking updates automatically when driver updates status.</span>
+          <span *ngIf="getStep(c) === 4">✅ Delivered</span>
+        </div>
+
+        <!-- ✅ Feedback UI (DELIVERED only) -->
+        <div class="feedback-box" *ngIf="(c.status || '').toUpperCase() === 'DELIVERED'">
+
+          <!-- Already submitted -->
+          <div *ngIf="c.feedbackRating != null" class="feedback-done">
+            ✅ Feedback submitted (Rating: {{ c.feedbackRating }}⭐)
+            <div class="feedback-comment" *ngIf="c.feedbackComment">
+              "{{ c.feedbackComment }}"
+            </div>
+          </div>
+
+          <!-- Not submitted -->
+          <div *ngIf="c.feedbackRating == null" class="feedback-form">
+            <h6 class="feedback-title">Give Feedback</h6>
+
+            <div class="row g-2 align-items-center">
+              <div class="col-md-3">
+                <select class="form-select form-select-sm"
+                        [(ngModel)]="feedbackRating[c.id]">
+                  <option [ngValue]="0">Rating</option>
+                  <option [ngValue]="1">1 ⭐</option>
+                  <option [ngValue]="2">2 ⭐⭐</option>
+                  <option [ngValue]="3">3 ⭐⭐⭐</option>
+                  <option [ngValue]="4">4 ⭐⭐⭐⭐</option>
+                  <option [ngValue]="5">5 ⭐⭐⭐⭐⭐</option>
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <input type="text"
+                       class="form-control form-control-sm"
+                       placeholder="Write your review (optional)"
+                       [(ngModel)]="feedbackComment[c.id]" />
+              </div>
+
+              <div class="col-md-3">
+                <button class="btn btn-sm btn-dark w-100"
+                        (click)="submitFeedbackForCargo(c)">
+                  Submit
+                </button>
+              </div>
+            </div>
+
+            <div class="mt-2 alert alert-success"
+                 *ngIf="feedbackSuccessByCargo[c.id] && feedbackSuccessByCargo[c.id].length > 0">
+              {{ feedbackSuccessByCargo[c.id] }}
+            </div>
+
+            <div class="mt-2 alert alert-danger"
+                 *ngIf="feedbackErrorByCargo[c.id] && feedbackErrorByCargo[c.id].length > 0">
+              {{ feedbackErrorByCargo[c.id] }}
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
   </ng-container>
 
-  <!-- ================= DRIVER DASHBOARD ================= -->
+  <!-- ================= DRIVER VIEW ================= -->
   <ng-container *ngIf="role === 'DRIVER'">
     <div class="card p-4 shadow">
       <h5>Your Assigned Cargos</h5>
@@ -52,6 +150,7 @@
             <th>Update Status</th>
           </tr>
         </thead>
+
         <tbody>
           <tr *ngFor="let c of cargos">
             <td>{{ c.id }}</td>
@@ -60,20 +159,19 @@
             <td>
               <span class="badge bg-warning text-dark">{{ c.status }}</span>
             </td>
+
             <td>
-              <select
-                class="form-select form-select-sm"
-                [(ngModel)]="newStatus">
+              <select class="form-select form-select-sm"
+                      [(ngModel)]="selectedStatusByCargoId[c.id]">
                 <option value="">Select</option>
                 <option value="PENDING">Pending</option>
                 <option value="IN_TRANSIT">In Transit</option>
                 <option value="DELIVERED">Delivered</option>
               </select>
 
-              <button
-                class="btn btn-sm btn-dark mt-2"
-                (click)="updateCargoId = c.id; updateStatus()"
-                [disabled]="!newStatus">
+              <button class="btn btn-sm btn-dark mt-2"
+                      (click)="updateStatus(c.id)"
+                      [disabled]="!selectedStatusByCargoId[c.id]">
                 Update
               </button>
             </td>

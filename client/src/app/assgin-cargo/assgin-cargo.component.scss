@@ -1,10 +1,8 @@
-/* Assign Cargo - Dark Glossy UI */
 .assign-page {
   min-height: calc(100vh - 60px);
   display: flex;
   justify-content: center;
-  align-items: center;
-
+  align-items: flex-start;
   padding: 90px 16px 30px;
   background: radial-gradient(circle at 12% 18%, #0d2b3a 0%, #070a14 55%, #050611 100%);
   color: #e5e7eb;
@@ -12,7 +10,7 @@
 
 .assign-wrap {
   width: 100%;
-  max-width: 560px;
+  max-width: 900px;
 }
 
 .assign-card {
@@ -23,13 +21,41 @@
   backdrop-filter: blur(10px);
 }
 
-/* Labels */
+.page-title {
+  color: rgba(234, 252, 255, 0.92);
+  font-weight: 950;
+  margin: 0 0 6px;
+}
+
+.page-subtitle {
+  margin: 0 0 14px;
+  color: rgba(229, 231, 235, 0.72);
+  font-weight: 700;
+}
+
+.section-title {
+  margin: 0;
+  font-weight: 950;
+  color: rgba(234, 252, 255, 0.92);
+}
+
+.section-subtitle {
+  margin: 4px 0 0;
+  color: rgba(229, 231, 235, 0.70);
+  font-weight: 700;
+}
+
+.mini-title {
+  margin: 0;
+  font-weight: 900;
+  color: rgba(234, 252, 255, 0.90);
+}
+
 .form-label {
   font-weight: 900;
   color: rgba(234, 252, 255, 0.90);
 }
 
-/* Inputs */
 .form-select,
 .form-control {
   border-radius: 12px;
@@ -39,17 +65,11 @@
   font-weight: 700;
 }
 
-.form-control::placeholder {
-  color: rgba(229, 231, 235, 0.65);
-}
-
-/* Dropdown options visible */
 .form-select option {
   background: #ffffff;
   color: #111;
 }
 
-/* Focus glow teal */
 .form-select:focus,
 .form-control:focus {
   border-color: rgba(45, 212, 191, 0.65);
@@ -57,13 +77,11 @@
   outline: none;
 }
 
-/* Alerts */
 .alert {
   border-radius: 12px;
   font-weight: 800;
 }
 
-/* Button glossy */
 .btn {
   border-radius: 12px;
   font-weight: 900;
@@ -72,4 +90,81 @@
 
 .btn:hover {
   transform: translateY(-2px);
+}
+
+.info-chip {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  font-weight: 800;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.summary-card {
+  border-radius: 14px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.summary-label {
+  color: rgba(229, 231, 235, 0.72);
+  font-weight: 850;
+  margin-bottom: 6px;
+}
+
+.summary-value {
+  font-size: 22px;
+  font-weight: 950;
+  color: rgba(234, 252, 255, 0.92);
+}
+
+.table {
+  color: rgba(229, 231, 235, 0.92) !important;
+}
+
+.table thead.table-dark {
+  --bs-table-bg: rgba(255, 255, 255, 0.06) !important;
+  --bs-table-color: #eafcff !important;
+}
+
+.table-bordered > :not(caption) > * {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+  --bs-table-accent-bg: rgba(255, 255, 255, 0.02) !important;
+  color: rgba(229, 231, 235, 0.92) !important;
+}
+
+.rating-cell .stars {
+  color: #fbbf24;
+  font-weight: 950;
+  letter-spacing: 1px;
+}
+
+.rating-cell .num {
+  margin-left: 8px;
+  color: rgba(229, 231, 235, 0.70);
+  font-weight: 850;
+}
+
+.empty-state {
+  margin-top: 12px;
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed rgba(255, 255, 255, 0.14);
+  color: rgba(229, 231, 235, 0.75);
+  font-weight: 900;
+}
+
+@media (max-width: 768px) {
+  .summary-grid { grid-template-columns: 1fr; }
 }

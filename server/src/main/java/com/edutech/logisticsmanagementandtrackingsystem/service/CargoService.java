@@ -1,5 +1,6 @@
 package com.edutech.logisticsmanagementandtrackingsystem.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -23,7 +24,16 @@ public class CargoService {
 
     /* ✅ ADD CARGO */
     public Cargo addCargo(Cargo cargo) {
-        cargo.setStatus("PENDING");
+
+        if (cargo.getStatus() == null || cargo.getStatus().trim().isEmpty()) {
+            cargo.setStatus("PENDING");
+        }
+
+        // ✅ Set default EDD only if not provided
+        if (cargo.getEstimatedDeliveryDate() == null) {
+            cargo.setEstimatedDeliveryDate(LocalDate.now().plusDays(3));
+        }
+
         return cargoRepository.save(cargo);
     }
 
@@ -46,26 +56,47 @@ public class CargoService {
 
     /* ✅ DRIVER UPDATES ONLY OWN CARGO */
     @Transactional
-    public Cargo updateStatusForDriver(
-            Long cargoId,
-            String newStatus,
-            String username) {
+    public Cargo updateStatusForDriver(Long cargoId, String newStatus, String username) {
 
         Cargo cargo = cargoRepository.findById(cargoId)
                 .orElseThrow(() -> new RuntimeException("Cargo not found"));
 
-        if (cargo.getDriver() == null ||
-            !cargo.getDriver().getName().equals(username)) {
+        if (cargo.getDriver() == null || !cargo.getDriver().getName().equals(username)) {
             throw new RuntimeException("Unauthorized cargo update");
         }
 
-        cargo.setStatus(newStatus);
+        // ✅ validate allowed statuses
+        String normalized = (newStatus == null) ? "" : newStatus.trim().toUpperCase();
+        if (!normalized.equals("PENDING") && !normalized.equals("IN_TRANSIT") && !normalized.equals("DELIVERED")) {
+            throw new RuntimeException("Invalid status");
+        }
+
+        cargo.setStatus(normalized);
+
+        // ✅ Safe fallback EDD if missing
+        if (cargo.getEstimatedDeliveryDate() == null) {
+            cargo.setEstimatedDeliveryDate(LocalDate.now().plusDays(3));
+        }
+
         return cargoRepository.save(cargo);
     }
 
     /* ✅ GET CARGO BY ID (SAFE) */
     public Cargo getCargoById(Long cargoId) {
-        return cargoRepository.findById(cargoId)
-                .orElse(null);
+        return cargoRepository.findById(cargoId).orElse(null);
+    }
+
+    /* ✅ SAVE CARGO (Used during assign/update flows if needed) */
+    public Cargo saveCargo(Cargo cargo) {
+
+        if (cargo.getStatus() == null || cargo.getStatus().trim().isEmpty()) {
+            cargo.setStatus("PENDING");
+        }
+
+        if (cargo.getEstimatedDeliveryDate() == null) {
+            cargo.setEstimatedDeliveryDate(LocalDate.now().plusDays(3));
+        }
+
+        return cargoRepository.save(cargo);
     }
 }

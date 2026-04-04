@@ -1,6 +1,8 @@
 package com.edutech.logisticsmanagementandtrackingsystem.entity;
 
+import java.time.LocalDate;
 import javax.persistence.*;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -19,6 +21,17 @@ public class Cargo {
 
     // Status can be: PENDING, IN_TRANSIT, DELIVERED
     private String status;
+
+    // ✅ EDD (Estimated Delivery Date)
+    private LocalDate estimatedDeliveryDate;
+
+    // ✅ Feedback stored in cargo table (allowed only after DELIVERED)
+    private Integer feedbackRating; // 1..5
+
+    @Column(length = 500)
+    private String feedbackComment; // optional
+
+    private LocalDate feedbackDate; // when feedback submitted
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "business_id")
@@ -51,6 +64,18 @@ public class Cargo {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public LocalDate getEstimatedDeliveryDate() { return estimatedDeliveryDate; }
+    public void setEstimatedDeliveryDate(LocalDate estimatedDeliveryDate) { this.estimatedDeliveryDate = estimatedDeliveryDate; }
+
+    public Integer getFeedbackRating() { return feedbackRating; }
+    public void setFeedbackRating(Integer feedbackRating) { this.feedbackRating = feedbackRating; }
+
+    public String getFeedbackComment() { return feedbackComment; }
+    public void setFeedbackComment(String feedbackComment) { this.feedbackComment = feedbackComment; }
+
+    public LocalDate getFeedbackDate() { return feedbackDate; }
+    public void setFeedbackDate(LocalDate feedbackDate) { this.feedbackDate = feedbackDate; }
 
     public Business getBusiness() { return business; }
     public void setBusiness(Business business) { this.business = business; }
