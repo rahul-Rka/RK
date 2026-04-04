@@ -1,51 +1,27 @@
-// import { Component } from '@angular/core';
-// import { AuthService } from '../services/auth.service';
-// import { Router } from '@angular/router';
-
-// @Component({
-//   selector: 'app-root',
-//   templateUrl: './app.component.html',
-//   styleUrls: ['./app.component.scss']
-// })
-// export class AppComponent {
-//   IsLoggin:any=false;
-//   roleName: string | null;
-//   constructor(private authService: AuthService, private router:Router)
-//   {
-//     debugger;
-//     this.IsLoggin=authService.getLoginStatus;
-//     this.roleName=authService.getRole;
-//     if(this.IsLoggin==false)
-//     {
-//       this.router.navigateByUrl('/login'); 
-    
-//     }
-//   }
-//   logout()
-// {
-//   this.authService.logout();
-//   window.location.reload();
-// }
-
-// }
-import { Component } from '@angular/core';
-import { AuthService } from '../services/auth.service';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
-  constructor(private authService: AuthService, private router: Router) {
-    if (!this.authService.getLoginStatus) {
+  // Routes accessible without login
+  private publicRoutes = ['/login', '/registration'];
+
+  constructor(private authService: AuthService, private router: Router) {}
+
+  ngOnInit(): void {
+    const currentUrl = this.router.url.split('?')[0];
+
+    if (!this.authService.getLoginStatus && !this.publicRoutes.includes(currentUrl)) {
       this.router.navigateByUrl('/login');
     }
   }
 
-  // Getters so navbar always reflects current state reactively
   get IsLoggin(): boolean {
     return this.authService.getLoginStatus;
   }
@@ -54,8 +30,8 @@ export class AppComponent {
     return this.authService.getRole;
   }
 
-  logout() {
+  logout(): void {
     this.authService.logout();
-    this.router.navigateByUrl('/login');  // ← no full page reload needed
+    this.router.navigateByUrl('/login');
   }
 }

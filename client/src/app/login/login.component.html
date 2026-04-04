@@ -1,118 +1,137 @@
 <div class="login-container">
-<!-- LEFT: LOGISTICS VISUAL -->
-<div class="visual-section">
-<div class="flow-layer"></div>
- 
-<div class="flow-text">
-<div class="flow-main">
- 
+
+  <!-- LEFT: LOGISTICS VISUAL -->
+  <div class="visual-section">
+    <div class="flow-layer"></div>
+
+    <div class="flow-text">
+      <div class="flow-main">
         BUSINESS <span>→</span> DRIVER <span>→</span> CUSTOMER
-</div>
-<div class="flow-sub">
- 
+      </div>
+      <div class="flow-sub">
         Pickup <span>•</span> In Transit <span>•</span> Delivered
-</div>
-</div>
-</div>
-<!-- RIGHT: LOGIN CARD -->
-<div class="form-section">
-<div class="card p-4 shadow" style="width:420px;">
-<h4 class="text-center fw-bold">LOGISTIC MANAGEMENT SYSTEM</h4>
-<p class="text-center text-muted">
- 
-        Please enter your user and password!
-</p>
-<form [formGroup]="itemForm" (ngSubmit)="login()">
-<!-- USERNAME -->
-<div class="mb-3">
-<label class="form-label">Username</label>
-<input type="text"
- 
-                 class="form-control"
- 
-                 formControlName="username"
-                 placeholder="Enter Username" />
-<small class="text-danger"
- 
-                 *ngIf="itemForm.controls['username'].touched &&
- 
-                        itemForm.controls['username'].errors">
-<span *ngIf="itemForm.controls['username'].errors?.['required']">
- 
-              Username is required
-</span><br>
-<span *ngIf="itemForm.controls['username'].errors?.['minlength']">
- 
-              Username must be at least 4 characters
-</span><br>
-<span *ngIf="itemForm.controls['username'].errors?.['pattern']">
- 
-              Only letters and numbers are allowed
-</span>
-</small>
-</div>
-<!-- PASSWORD -->
-<div class="mb-3">
-<label class="form-label">Password</label>
-<input type="password"
- 
-                 class="form-control"
- 
-                 formControlName="password"
- 
-                 placeholder="Password" />
-<small class="text-danger"
- 
-                 *ngIf="itemForm.controls['password'].touched &&
- 
-                        itemForm.controls['password'].errors">
-<span *ngIf="itemForm.controls['password'].errors?.['required']">
- 
-              Password is required
-</span><br>
-<span *ngIf="itemForm.controls['password'].errors?.['minlength']">
- 
-              Password must be at least 8 characters
-</span><br>
-<span *ngIf="itemForm.controls['password'].errors?.['pattern']">
- 
-              Password must contain letters, numbers and one special character
-</span>
-</small>
-</div>
-<button type="submit"
- 
-                class="btn btn-outline-dark w-100"
- 
-                [disabled]="itemForm.invalid">
- 
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: LOGIN CARD -->
+  <div class="form-section">
+    <div class="card p-4 shadow" style="width:420px;">
+
+      <h4 class="text-center fw-bold">LOGISTIC MANAGEMENT SYSTEM</h4>
+      <p class="text-center text-muted">Please enter your user and password!</p>
+
+      <form [formGroup]="itemForm" (ngSubmit)="login()">
+
+        <!-- USERNAME -->
+        <div class="mb-3">
+          <label class="form-label">Username</label>
+          <input type="text" class="form-control" formControlName="username" />
+
+          <small class="text-danger"
+                 *ngIf="itemForm.controls['username'].touched && itemForm.controls['username'].errors">
+            <span *ngIf="itemForm.controls['username'].errors?.['required']">Username is required</span><br>
+            <span *ngIf="itemForm.controls['username'].errors?.['minlength']">Username must be at least 4 characters</span><br>
+            <span *ngIf="itemForm.controls['username'].errors?.['pattern']">Only letters and numbers are allowed</span>
+          </small>
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+
+          <div class="password-wrapper">
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              class="form-control"
+              formControlName="password"
+              placeholder="Password"
+            />
+            <span class="toggle-eye" (click)="togglePassword()">
+              {{ showPassword ? '🙈' : '👁️' }}
+            </span>
+          </div>
+
+          <small class="text-danger"
+                 *ngIf="itemForm.controls['password'].touched && itemForm.controls['password'].errors">
+            <span *ngIf="itemForm.controls['password'].errors?.['required']">Password is required</span><br>
+            <span *ngIf="itemForm.controls['password'].errors?.['minlength']">Password must be at least 8 characters</span><br>
+            <span *ngIf="itemForm.controls['password'].errors?.['pattern']">Password must contain letters, numbers and one special character</span>
+          </small>
+        </div>
+
+        <!-- FORGOT -->
+        <p class="text-end mb-3">
+          <a href="#" class="forgot-link" (click)="openForgot($event)">Forgot password?</a>
+        </p>
+
+        <button type="submit" class="btn btn-outline-dark w-100" [disabled]="itemForm.invalid">
           Login
-</button>
-<p class="text-center mt-3">
- 
+        </button>
+
+        <p class="text-center mt-3">
           Don't have an account?
-<a routerLink="/registration"><strong>Registration</strong></a>
-</p>
-</form>
+          <a routerLink="/registration"><strong>Registration</strong></a>
+        </p>
+
+      </form>
+    </div>
+  </div>
 </div>
-</div>
-</div>
+
 <!-- LOGIN ERROR -->
 <div *ngIf="loginError"
- 
      style="position:fixed; inset:0; background:rgba(0,0,0,0.5);
- 
             display:flex; align-items:center; justify-content:center; z-index:1000;">
-<div style="background:white; padding:25px; width:320px;
- 
-              border-radius:6px; text-align:center;">
-<h5 style="color:#dc3545;">Login Failed</h5>
-<p>Invalid username or password.</p>
-<button class="btn btn-danger w-100"
- 
-            (click)="loginError=false">
- 
-      OK
-</button>
+  <div style="background:white; padding:25px; width:320px; border-radius:6px; text-align:center;">
+    <h5 style="color:#dc3545;">Login Failed</h5>
+    <p>Invalid username or password.</p>
+    <button class="btn btn-danger w-100" (click)="loginError=false">OK</button>
+  </div>
 </div>
+
+<!-- FORGOT MODAL -->
+<div class="fp-backdrop" *ngIf="showForgotModal">
+  <div class="fp-modal">
+    <h5 class="fp-title">Reset Password</h5>
+    <p class="fp-sub">Enter your registered email and set a new password.</p>
+
+    <form [formGroup]="forgotForm" (ngSubmit)="resetPassword()">
+
+      <label class="fp-label">Email</label>
+      <input class="fp-input" type="email" formControlName="email" placeholder="name@example.com" />
+      <small class="text-danger"
+             *ngIf="forgotForm.controls['email'].touched && forgotForm.controls['email'].invalid">
+        Valid email is required
+      </small>
+
+      <label class="fp-label">New Password</label>
+      <input class="fp-input" type="password" formControlName="newPassword" placeholder="New password" />
+      <small class="text-danger"
+             *ngIf="forgotForm.controls['newPassword'].touched && forgotForm.controls['newPassword'].invalid">
+        Must be 8+ chars, include letter, number & special char
+      </small>
+
+      <label class="fp-label">Confirm Password</label>
+      <input class="fp-input" type="password" formControlName="confirmPassword" placeholder="Confirm password" />
+      <small class="text-danger"
+             *ngIf="forgotForm.errors?.['mismatch'] && forgotForm.controls['confirmPassword'].touched">
+        Passwords do not match
+      </small>
+
+      <!-- BACKEND ERROR -->
+      <div class="alert alert-danger mt-3" *ngIf="forgotError">{{ forgotError }}</div>
+
+      <!-- BACKEND SUCCESS -->
+      <div class="alert alert-success mt-3" *ngIf="forgotSuccess">{{ forgotSuccess }}</div>
+
+      <div class="fp-actions">
+        <button type="button" class="fp-btn fp-cancel" (click)="closeForgot()">Cancel</button>
+        <button type="submit" class="fp-btn fp-submit" [disabled]="forgotForm.invalid || resetLoading">
+          {{ resetLoading ? 'Resetting...' : 'Reset' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
 </div>

@@ -42,7 +42,9 @@ public class BusinessController {
             return driverRepository.findByAvailableTrueAndCurrentLocationIgnoreCase(location.trim());
         }
 
-        return driverRepository.findByAvailableTrue();
+        // return driverRepository.findAvailableTrue();
+        return driverRepository.findAll();
+
     }
 
     @GetMapping("/customers")

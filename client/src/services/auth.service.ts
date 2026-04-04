@@ -5,45 +5,33 @@ import { Injectable } from '@angular/core';
 })
 export class AuthService {
 
-  private loggedIn: boolean = false;
-  private role: string = '';
-
-  constructor() {
-    const token = localStorage.getItem('token');
-    const savedRole = localStorage.getItem('role');
-    if (token && savedRole) {
-      this.loggedIn = true;
-      this.role = savedRole;
-    }
+  setToken(token: string) {
+    localStorage.setItem('token', token);
   }
 
-  setLoginStatus(status: boolean): void {
-    this.loggedIn = status;
+  getToken(): string {
+    return localStorage.getItem('token') || '';
   }
 
-  get getLoginStatus(): boolean {
-    // ✅ safer: also checks token
-    return this.loggedIn && !!localStorage.getItem('token');
-  }
-
-  get getRole(): string {
-    return this.role;
-  }
-
-  setRole(role: string): void {
-    this.role = role;
+  setRole(role: string) {
     localStorage.setItem('role', role);
   }
 
-  setToken(token: string): void {
-    localStorage.setItem('token', token);
-    this.loggedIn = true;
+  get getRole(): string {
+    return localStorage.getItem('role') || '';
   }
 
-  logout(): void {
-    this.loggedIn = false;
-    this.role = '';
+  setLoginStatus(status: boolean) {
+    localStorage.setItem('isLoggedIn', status ? 'true' : 'false');
+  }
+
+  get getLoginStatus(): boolean {
+    return localStorage.getItem('isLoggedIn') === 'true';
+  }
+
+  logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
+    localStorage.removeItem('isLoggedIn');
   }
 }
