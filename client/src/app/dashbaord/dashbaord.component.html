@@ -5,6 +5,7 @@
     <h2 class="page-title mb-4">Business Dashboard</h2>
 
     <div class="row g-3 mb-4 stats-row">
+
       <div class="col-md-4">
         <div class="stat-card">
           <div class="stat-top">
@@ -19,11 +20,26 @@
       </div>
 
       <div class="col-md-4">
-        <div class="stat-card">
+        <!-- ⭐ CLICK HERE TO SHOW DRIVER DETAILS -->
+        <div class="stat-card" style="cursor:pointer;" (click)="toggleDriverInfo()">
           <div class="stat-top">
             <div>
               <div class="stat-label">Total Drivers</div>
               <div class="stat-value">{{ drivers.length }}</div>
+
+              <!-- ⭐ SHOW ONLY WHEN CLICKED -->
+              <div *ngIf="showDriverDetails">
+
+                <div class="mt-2" *ngFor="let d of drivers; let i = index">
+                  <div class="text-muted small">
+                    Driver {{ i + 1 }} 
+                    (availability - {{ d.available ? 'available' : 'busy' }},
+                    location - {{ d.location || 'Not updated' }})
+                  </div>
+                </div>
+
+              </div>
+
             </div>
             <div class="stat-icon accent-green">🚚</div>
           </div>
@@ -66,9 +82,7 @@
             <td>{{ c.id }}</td>
             <td>{{ c.content }}</td>
             <td>{{ c.size }}</td>
-            <td>
-              <span class="status-pill">{{ c.status }}</span>
-            </td>
+            <td><span class="status-pill">{{ c.status }}</span></td>
           </tr>
 
           <tr *ngIf="cargos.length === 0">
@@ -77,13 +91,14 @@
         </tbody>
       </table>
     </div>
+
   </ng-container>
 
-  <!-- ================= DRIVER DASHBOARD ================= -->
+
+  <!-- ================= DRIVER DASHBOARD (unchanged) ================= -->
   <ng-container *ngIf="role === 'DRIVER'">
     <h2 class="page-title mb-4">Driver Dashboard</h2>
 
-    <!-- ✅ NEW: Availability + Location Card -->
     <div class="card p-3 mb-3 shadow-sm">
       <div class="d-flex align-items-center justify-content-between">
         <div>
@@ -140,7 +155,8 @@
     </div>
   </ng-container>
 
-  <!-- ================= CUSTOMER DASHBOARD ================= -->
+
+  <!-- ================= CUSTOMER DASHBOARD (unchanged) ================= -->
   <ng-container *ngIf="role === 'CUSTOMER'">
     <h2 class="page-title mb-4">Customer Dashboard</h2>
 

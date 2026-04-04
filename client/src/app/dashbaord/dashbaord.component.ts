@@ -15,9 +15,11 @@ export class DashbaordComponent implements OnInit {
   drivers: any[] = [];
   assignedCargos: any[] = [];
 
-  // ✅ availability UI state
   driverAvailable: boolean | null = null;
   locationInput = '';
+
+  // ⭐ NEW → show details only when user clicks on "Total Drivers"
+  showDriverDetails = false;
 
   constructor(
     private authService: AuthService,
@@ -30,12 +32,21 @@ export class DashbaordComponent implements OnInit {
 
     if (this.role === 'BUSINESS') {
       this.service.getCargo().subscribe((res: any) => this.cargos = res);
-      this.service.getDrivers().subscribe((res: any) => this.drivers = res);
+
+      // fetching drivers -> includes availability + location
+      this.service.getDrivers().subscribe((res: any) => {
+        this.drivers = res;
+      });
     }
 
     if (this.role === 'DRIVER') {
       this.service.getAssignOrders().subscribe((res: any) => this.assignedCargos = res);
     }
+  }
+
+  // ⭐ NEW → toggle driver details
+  toggleDriverInfo() {
+    this.showDriverDetails = !this.showDriverDetails;
   }
 
   toggleAvailability() {
