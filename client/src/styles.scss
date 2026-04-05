@@ -1,1 +1,20 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap');
+
+:root {
+  --delhivery-red: #E11D48;
+  --onyx-black: #0f172a;
+  --slate-gray: #64748b;
+  --snow-white: #ffffff;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: var(--snow-white);
+  color: var(--onyx-black);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Elite Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: var(--delhivery-red); border-radius: 10px; }

@@ -1,177 +1,122 @@
-<div class="login-container">
-
-  <!-- LEFT: LOGISTICS VISUAL -->
-  <div class="visual-section">
-    <div class="flow-layer"></div>
-
-    <div class="flow-text">
-      <div class="flow-main">
-        BUSINESS <span>→</span> DRIVER <span>→</span> CUSTOMER
+<div class="split-viewport">
+  
+  <div class="visual-side">
+    <div class="overlay-gradient"></div>
+    
+    <div class="branding-content animate-fade-in">
+      <div class="logo-signature">
+        <h1 class="brannd-logo-premium">
+          LOGI<span class="teext-red-gradient">TRACK</span>
+        </h1>
+        <div class="logo-glow-bar">
+          <div class="scan-light"></div>
+        </div>
+        <p class="logo-subtitle">INTEGRATED LOGISTICS INTELLIGENCE</p>
       </div>
-      <div class="flow-sub">
-        Pickup <span>•</span> In Transit <span>•</span> Delivered
-      </div>
+      
+    
     </div>
   </div>
 
-  <!-- RIGHT: LOGIN CARD -->
-  <div class="form-section">
-    <div class="card p-4 shadow" style="width:420px;">
-
-      <h4 class="text-center fw-bold">LOGISTIC MANAGEMENT SYSTEM</h4>
-      <p class="text-center text-muted">Please enter your user and password!</p>
+  <div class="form-side">
+    <div class="auth-card glassy-glow">
+      <div class="card-header-box">
+        <h3 class="fw-900 text-white">Partner <span class="text-red">Login</span></h3>
+        <p class="text-muted small">Access your fleet and cargo command center</p>
+      </div>
 
       <form [formGroup]="itemForm" (ngSubmit)="login()">
-
-        <!-- USERNAME -->
-        <div class="mb-3">
-          <label class="form-label">Username</label>
-          <input type="text" class="form-control" formControlName="username" />
-
-          <small class="text-danger"
-                 *ngIf="itemForm.controls['username'].touched && itemForm.controls['username'].errors">
-            <span *ngIf="itemForm.controls['username'].errors?.['required']">Username is required</span><br>
-            <span *ngIf="itemForm.controls['username'].errors?.['minlength']">Username must be at least 4 characters</span><br>
-            <span *ngIf="itemForm.controls['username'].errors?.['pattern']">Only letters and numbers are allowed</span>
-          </small>
+        <div class="mb-4">
+          <label class="field-label">USERNAME</label>
+          <input type="text" class="delhi-input" formControlName="username" placeholder="Username">
+          <div class="error-box" *ngIf="itemForm.controls['username'].touched && itemForm.controls['username'].errors">
+            <small *ngIf="itemForm.controls['username'].errors?.['required']">Username required</small>
+            <small *ngIf="itemForm.controls['username'].errors?.['minlength']">Min 4 chars</small>
+          </div>
         </div>
 
-        <!-- PASSWORD -->
         <div class="mb-3">
-          <label class="form-label">Password</label>
-
+          <label class="field-label">PASSWORD</label>
           <div class="password-wrapper">
-            <input
-              [type]="showPassword ? 'text' : 'password'"
-              class="form-control"
-              formControlName="password"
-              placeholder="Password"
-            />
-            <span class="toggle-eye" (click)="togglePassword()">
+            <input [type]="showPassword ? 'text' : 'password'" class="delhi-input" formControlName="password" placeholder="••••••••">
+            <span class="eye-toggle" (click)="togglePassword()">
               {{ showPassword ? '🙈' : '👁️' }}
             </span>
           </div>
-
-          <small class="text-danger"
-                 *ngIf="itemForm.controls['password'].touched && itemForm.controls['password'].errors">
-            <span *ngIf="itemForm.controls['password'].errors?.['required']">Password is required</span><br>
-            <span *ngIf="itemForm.controls['password'].errors?.['minlength']">Password must be at least 8 characters</span><br>
-            <span *ngIf="itemForm.controls['password'].errors?.['pattern']">Password must contain letters, numbers and one special character</span>
-          </small>
+          <div class="error-box" *ngIf="itemForm.controls['password'].touched && itemForm.controls['password'].errors">
+            <small>Requires letters, numbers & special character</small>
+          </div>
         </div>
 
-        <!-- FORGOT -->
-        <p class="text-end mb-3">
-          <a href="#" class="forgot-link" (click)="openForgot($event)">Forgot password?</a>
-        </p>
+        <div class="text-end mb-4">
+          <a class="forgot-link" (click)="openForgot($event)">Forgot password?</a>
+        </div>
 
-        <button type="submit" class="btn btn-outline-dark w-100" [disabled]="itemForm.invalid || loginLoading">
-          {{ loginLoading ? 'Logging in...' : 'Login' }}
+        <button type="submit" class="btn-delhi-login" [disabled]="itemForm.invalid || loginLoading">
+          {{ loginLoading ? 'AUTHENTICATING...' : 'SECURE LOGIN' }}
         </button>
 
-        <p class="text-center mt-3">
-          Don't have an account?
-          <a routerLink="/registration"><strong>Registration</strong></a>
+        <p class="text-center mt-4 text-muted small">
+          New to the network? <a routerLink="/registration" class="text-red fw-bold">Register Now</a>
         </p>
-
       </form>
     </div>
   </div>
+
 </div>
 
-<!-- LOGIN ERROR -->
-<div *ngIf="loginError"
-     style="position:fixed; inset:0; background:rgba(0,0,0,0.5);
-            display:flex; align-items:center; justify-content:center; z-index:1000;">
-  <div style="background:white; padding:25px; width:320px; border-radius:6px; text-align:center;">
-    <h5 style="color:#dc3545;">Login Failed</h5>
-    <p>{{ message || 'Invalid username or password.' }}</p>
-    <button class="btn btn-danger w-100" (click)="loginError=false">OK</button>
-  </div>
-</div>
-
-<!-- ✅ OTP MODAL -->
-<div *ngIf="showOtpModal"
-     style="position:fixed; inset:0; background:rgba(0,0,0,0.5);
-            display:flex; align-items:center; justify-content:center; z-index:1100;">
-  <div style="background:white; padding:25px; width:360px; border-radius:6px;">
-    <h5 class="text-center fw-bold">OTP Verification</h5>
-    <p class="text-muted text-center" style="margin-bottom: 12px;">
-      {{ message || 'OTP sent to your registered email. Enter OTP to continue.' }}
-    </p>
+<div class="master-overlay" *ngIf="showOtpModal">
+  <div class="otp-box-modern glassy-glow animate-pop">
+    <div class="text-center">
+      <div class="icon-shield"><i class="bi bi-shield-lock-fill"></i></div>
+      <h4 class="fw-900 mt-3 text-white">OTP Verification</h4>
+      <p class="text-muted small px-3">{{ message }}</p>
+    </div>
 
     <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()">
-      <label class="form-label">Enter OTP</label>
-      <input type="text"
-             class="form-control"
-             formControlName="otp"
-             maxlength="6"
-             placeholder="Enter 6 digit OTP" />
-
-      <small class="text-danger"
-             *ngIf="otpForm.controls['otp'].touched && otpForm.controls['otp'].invalid">
-        OTP must be 6 digits
-      </small>
-
-      <div class="alert alert-success mt-3" *ngIf="otpSuccess">OTP Verified ✅</div>
-      <div class="alert alert-danger mt-3" *ngIf="otpError">{{ message || 'Invalid OTP' }}</div>
-
-      <div class="d-flex gap-2 mt-3">
-        <button type="submit" class="btn btn-success flex-fill" [disabled]="otpLoading">
-          {{ otpLoading ? 'Verifying...' : 'Verify' }}
-        </button>
-
-        <button type="button" class="btn btn-outline-secondary flex-fill" (click)="resendOtp()" [disabled]="otpLoading">
-          Resend
-        </button>
+      <div class="mt-4 text-center">
+        <label class="field-label d-block mb-2">ENTER 6-DIGIT CODE</label>
+        <input type="text" class="input-otp-large" formControlName="otp" maxlength="6" placeholder="000000">
       </div>
 
-      <button type="button" class="btn btn-outline-dark w-100 mt-2" (click)="cancelOtp()" [disabled]="otpLoading">
-        Cancel
-      </button>
+      <div class="alert-success-box" *ngIf="otpSuccess">Verified Successfully!</div>
+      <div class="alert-error-box" *ngIf="otpError">{{ message }}</div>
+
+      <div class="d-flex gap-2 mt-4">
+        <button type="submit" class="btn-verify-red" [disabled]="otpLoading">VERIFY</button>
+        <button type="button" class="btn-resend-outline" (click)="resendOtp()" [disabled]="otpLoading">RESEND</button>
+      </div>
+
+      <button type="button" class="btn-cancel-link" (click)="cancelOtp()">Cancel Login</button>
     </form>
   </div>
 </div>
 
-<!-- FORGOT MODAL -->
-<div class="fp-backdrop" *ngIf="showForgotModal">
-  <div class="fp-modal">
-    <h5 class="fp-title">Reset Password</h5>
-    <p class="fp-sub">Enter your registered email and set a new password.</p>
-
+<div class="master-overlay" *ngIf="showForgotModal">
+  <div class="forgot-modal glassy-glow p-4 animate-pop">
+    <h5 class="fw-900 mb-2 text-white">Reset Password</h5>
+    <p class="text-muted small mb-4">Enter email to update credentials</p>
     <form [formGroup]="forgotForm" (ngSubmit)="resetPassword()">
-
-      <label class="fp-label">Email</label>
-      <input class="fp-input" type="email" formControlName="email" placeholder="name@example.com" />
-      <small class="text-danger"
-             *ngIf="forgotForm.controls['email'].touched && forgotForm.controls['email'].invalid">
-        Valid email is required
-      </small>
-
-      <label class="fp-label">New Password</label>
-      <input class="fp-input" type="password" formControlName="newPassword" placeholder="New password" />
-      <small class="text-danger"
-             *ngIf="forgotForm.controls['newPassword'].touched && forgotForm.controls['newPassword'].invalid">
-        Must be 8+ chars, include letter, number & special char
-      </small>
-
-      <label class="fp-label">Confirm Password</label>
-      <input class="fp-input" type="password" formControlName="confirmPassword" placeholder="Confirm password" />
-      <small class="text-danger"
-             *ngIf="forgotForm.errors?.['mismatch'] && forgotForm.controls['confirmPassword'].touched">
-        Passwords do not match
-      </small>
-
-      <div class="alert alert-danger mt-3" *ngIf="forgotError">{{ forgotError }}</div>
-      <div class="alert alert-success mt-3" *ngIf="forgotSuccess">{{ forgotSuccess }}</div>
-
-      <div class="fp-actions">
-        <button type="button" class="fp-btn fp-cancel" (click)="closeForgot()">Cancel</button>
-        <button type="submit" class="fp-btn fp-submit" [disabled]="forgotForm.invalid || resetLoading">
-          {{ resetLoading ? 'Resetting...' : 'Reset' }}
-        </button>
+      <div class="mb-3">
+        <label class="field-label">EMAIL</label>
+        <input type="email" class="delhi-input" formControlName="email">
+      </div>
+      <div class="mb-3">
+        <label class="field-label">NEW PASSWORD</label>
+        <input type="password" class="delhi-input" formControlName="newPassword">
+      </div>
+      <div class="mb-3">
+        <label class="field-label">CONFIRM PASSWORD</label>
+        <input type="password" class="delhi-input" formControlName="confirmPassword">
       </div>
 
+      <div class="alert-error-box" *ngIf="forgotError">{{ forgotError }}</div>
+      <div class="alert-success-box" *ngIf="forgotSuccess">{{ forgotSuccess }}</div>
+
+      <div class="d-flex gap-2 mt-4">
+        <button type="button" class="btn-resend-outline" (click)="closeForgot()">Cancel</button>
+        <button type="submit" class="btn-verify-red" [disabled]="forgotForm.invalid || resetLoading">Update</button>
+      </div>
     </form>
   </div>
 </div>

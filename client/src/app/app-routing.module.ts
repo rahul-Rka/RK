@@ -11,16 +11,26 @@ import { ViewcargostatusComponent } from './viewcargostatus/viewcargostatus.comp
 import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
+  // ✅ MAIN PAGE is handled inside AppComponent at "/"
+  // No component here because AppComponent already renders always.
+
+  // ✅ AUTH
   { path: 'login', component: LoginComponent },
   { path: 'registration', component: RegistrationComponent },
 
+  // ✅ PROTECTED ROUTES
   { path: 'dashboard', component: DashbaordComponent, canActivate: [AuthGuard] },
   { path: 'add-cargo', component: AddcargoComponent, canActivate: [AuthGuard] },
   { path: 'assign-cargo', component: AssginCargoComponent, canActivate: [AuthGuard] },
   { path: 'view-cargo-status', component: ViewcargostatusComponent, canActivate: [AuthGuard] },
 
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: '**', redirectTo: '/login' },
+  // ✅ Keep "/" as-is (Landing UI will appear from AppComponent)
+  { path: '', pathMatch: 'full', component: LoginComponent }, 
+  // ⚠️ Do NOT worry: AppComponent will detect "/" and show Landing UI,
+  // and hide router-outlet. This route entry prevents Angular "no route" issues in some portals.
+
+  // ✅ Unknown routes -> go to main page
+  { path: '**', redirectTo: '' },
 ];
 
 @NgModule({
