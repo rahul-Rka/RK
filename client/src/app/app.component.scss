@@ -45,14 +45,14 @@ $black: #0f172a;
   &.blink-hover:hover {
     transform: translateY(-10px);
     border-color: $red;
-    animation: neon-blink 1s infinite alternate; /* ✅ BLINK EFFECT */
+    animation: neon-blink 1s infinite alternate; /*  BLINK EFFECT */
     .icon-circle { background: $red; color: #fff; }
   }
 }
 
 $red: #E11D48;
 
-/* ✅ REMOVE BLUE UNDERLINE & STYLE LOGIN */
+
 .nav-link-elite {
   color: #ffffff !important;      /* Pure white text */
   text-decoration: none !important; /* Removes the blue underline */
@@ -70,7 +70,7 @@ $red: #E11D48;
   }
 }
 
-/* ✅ REMOVE GRAY BOX & STYLE SIGN UP */
+
 .btn-signup-red {
   background: $red;               /* Delhivery Red */
   color: #fff;
@@ -97,7 +97,7 @@ $red: #E11D48;
 /* --- Variables --- */
 $red: #E11D48;
 
-/* ✅ ELITE ROLE BADGE (BUSINESS) */
+/* ELITE ROLE BADGE (BUSINESS) */
 .role-badge-cyber {
   background: rgba(225, 29, 72, 0.1); /* Subtle red tint */
   color: #E11D48;
@@ -112,7 +112,7 @@ $red: #E11D48;
   display: inline-block;
 }
 
-/* ✅ NEON LOGOUT BUTTON */
+/*  NEON LOGOUT BUTTON */
 .btn-logout-neon {
   /* Remove browser defaults */
   background: transparent;

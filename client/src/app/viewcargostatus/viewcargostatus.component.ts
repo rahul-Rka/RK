@@ -13,19 +13,19 @@ export class ViewcargostatusComponent implements OnInit, OnDestroy {
   role = '';
   cargos: any[] = [];
 
-  // ✅ DRIVER: per-row dropdown values
+  //  DRIVER: per-row dropdown values
   selectedStatusByCargoId: { [cargoId: number]: string } = {};
 
   successMessage = '';
   errorMessage = '';
 
-  // ✅ FEEDBACK form values per cargo
+  //  FEEDBACK form values per cargo
   feedbackRating: { [cargoId: number]: number } = {};
   feedbackComment: { [cargoId: number]: string } = {};
   feedbackSuccessByCargo: { [cargoId: number]: string } = {};
   feedbackErrorByCargo: { [cargoId: number]: string } = {};
 
-  // ✅ Auto refresh for customer view
+  //  Auto refresh for customer view
   private refreshSub?: Subscription;
 
   constructor(private service: HttpService, private router: Router) {}
@@ -67,7 +67,7 @@ export class ViewcargostatusComponent implements OnInit, OnDestroy {
     this.cargos = [];
   }
 
-  // ✅ 4-step mapping: Ordered, Packed, In Transit, Delivered
+  // 4-step mapping: Ordered, Packed, In Transit, Delivered
   getStep(cargo: any): number {
     const status = (cargo?.status || '').toUpperCase();
     const hasDriver = !!cargo?.driver;
@@ -78,7 +78,7 @@ export class ViewcargostatusComponent implements OnInit, OnDestroy {
     return 1;
   }
 
-  // ✅ DRIVER: update status
+  // DRIVER: update status
   updateStatus(cargoId: number): void {
     const newStatus = (this.selectedStatusByCargoId[cargoId] || '').trim();
     if (!newStatus) return;
@@ -97,7 +97,7 @@ export class ViewcargostatusComponent implements OnInit, OnDestroy {
     });
   }
 
-  // ✅ CUSTOMER: submit feedback
+  //  CUSTOMER: submit feedback
   submitFeedbackForCargo(cargo: any): void {
     const cargoId = cargo?.id;
     if (!cargoId) return;

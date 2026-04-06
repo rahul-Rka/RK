@@ -35,7 +35,7 @@ public class BusinessController {
         return ResponseEntity.ok(businessService.addCargo(cargo));
     }
 
-    /* ✅ GET DRIVERS
+    /*  GET DRIVERS
        - if location passed: drivers available at that location
        - else: return all (as in your current project)
     */
@@ -43,26 +43,26 @@ public class BusinessController {
     public List<Driver> getAllDrivers(@RequestParam(required = false) String location) {
 
         if (location != null && !location.trim().isEmpty()) {
-            // ✅ This method was already used in your file, so we keep it
+            //  This method was already used in your file, so we keep it
             return driverRepository.findByAvailableTrueAndCurrentLocationIgnoreCase(location.trim());
         }
 
-        return driverRepository.findAll();
+        return driverRepository.findByAvailableTrue();
     }
 
-    /* ✅ GET ALL CUSTOMERS */
+    /*  GET ALL CUSTOMERS */
     @GetMapping("/customers")
     public List<Customer> getAllCustomers() {
         return customerRepository.findAll();
     }
 
-    /* ✅ GET ALL CARGO */
+    /*  GET ALL CARGO */
     @GetMapping("/cargo")
     public ResponseEntity<List<Cargo>> getAllCargo() {
         return ResponseEntity.ok(businessService.getAllCargo());
     }
 
-    /* ✅ ASSIGN CARGO TO DRIVER + CUSTOMER */
+    /*  ASSIGN CARGO TO DRIVER + CUSTOMER */
     @PostMapping("/assign-cargo")
     public ResponseEntity<Cargo> assignCargo(
             @RequestParam Long cargoId,
@@ -75,7 +75,7 @@ public class BusinessController {
     }
 
     /* =========================================================
-       ✅ NEW: BUSINESS DASHBOARD - VIEW ALL FEEDBACKS
+        NEW: BUSINESS DASHBOARD - VIEW ALL FEEDBACKS
        URL: GET /api/business/feedbacks
        ========================================================= */
     @GetMapping("/feedbacks")

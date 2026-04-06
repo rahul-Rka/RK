@@ -26,7 +26,7 @@ public class CustomerController {
     @Autowired
     private CustomerRepository customerRepository;
 
-    /* ✅ CUSTOMER: VIEW OWN CARGOS */
+    /*  CUSTOMER: VIEW OWN CARGOS */
     @GetMapping("/cargo")
     public ResponseEntity<List<Cargo>> getMyCargos(Authentication authentication) {
 
@@ -42,7 +42,7 @@ public class CustomerController {
         );
     }
 
-    /* ✅ CUSTOMER: SUBMIT FEEDBACK (stored in cargo table)
+    /*  CUSTOMER: SUBMIT FEEDBACK (stored in cargo table)
        URL: POST /api/customer/submit-feedback?cargoId=2
        Body: { "rating": 5, "comment": "Good service" }
     */
@@ -64,23 +64,23 @@ public class CustomerController {
             return ResponseEntity.badRequest().body(Map.of("message", "Cargo not found"));
         }
 
-        // ✅ Security: cargo must belong to logged-in customer
+        //  Security: cargo must belong to logged-in customer
         if (cargo.getCustomer() == null || !cargo.getCustomer().getId().equals(customer.getId())) {
             return ResponseEntity.status(403).body(Map.of("message", "Not allowed"));
         }
 
-        // ✅ Allow feedback only after delivered
+        //  Allow feedback only after delivered
         String status = cargo.getStatus() == null ? "" : cargo.getStatus().trim().toUpperCase();
         if (!"DELIVERED".equals(status)) {
             return ResponseEntity.badRequest().body(Map.of("message", "Feedback allowed only after delivery"));
         }
 
-        // ✅ Prevent duplicate feedback
+        //  Prevent duplicate feedback
         if (cargo.getFeedbackRating() != null) {
             return ResponseEntity.badRequest().body(Map.of("message", "Feedback already submitted"));
         }
 
-        // ✅ Validate rating 1..5
+        //  Validate rating 1..5
         Integer rating;
         try {
             rating = Integer.parseInt(String.valueOf(body.get("rating")));
@@ -92,7 +92,7 @@ public class CustomerController {
             return ResponseEntity.badRequest().body(Map.of("message", "Rating must be between 1 and 5"));
         }
 
-        // ✅ Comment optional, max 500 chars
+        //  Comment optional, max 500 chars
         String comment = body.get("comment") == null ? "" : String.valueOf(body.get("comment")).trim();
         if (comment.length() > 500) {
             comment = comment.substring(0, 500);

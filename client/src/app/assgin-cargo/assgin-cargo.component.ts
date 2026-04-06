@@ -21,10 +21,10 @@ export class AssginCargoComponent implements OnInit {
   errorMessage = '';
   role = '';
 
-  // ✅ Location-based filtering (your feature)
+  // Location-based filtering (your feature)
   selectedCargoLocation = '';
 
-  // ✅ Feedback dashboard state (friend feature)
+  // Feedback dashboard state (friend feature)
   feedbackCargos: any[] = [];
   feedbackSummary: any = null;
   feedbackLoadError = '';
@@ -59,7 +59,7 @@ export class AssginCargoComponent implements OnInit {
     });
   }
 
-  // ✅ Called when cargo dropdown changes
+  // Called when cargo dropdown changes
   onCargoChange(): void {
     const selectedCargo = this.cargos.find(c => c.id === this.selectedCargoId);
 
@@ -86,7 +86,7 @@ export class AssginCargoComponent implements OnInit {
       return;
     }
 
-    // ✅ filter drivers by location (maps to /api/business/drivers?location=...)
+    // filter drivers by location (maps to /api/business/drivers?location=...)
     this.service.getDriversByLocation(this.selectedCargoLocation).subscribe({
       next: (data: any) => this.drivers = Array.isArray(data) ? data : [],
       error: () => this.drivers = []
@@ -120,7 +120,7 @@ export class AssginCargoComponent implements OnInit {
     }
   }
 
-  // ✅ Loads feedback list + summary (friend feature)
+  //  Loads feedback list + summary (friend feature)
   loadFeedbackDashboard(): void {
     this.loadingFeedback = true;
     this.feedbackLoadError = '';

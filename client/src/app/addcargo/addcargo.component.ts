@@ -23,7 +23,7 @@ export class AddcargoComponent {
       content: ['', Validators.required],
       size: ['', Validators.required],
 
-      // ✅ NEW: Source Location required for driver filtering
+      //  Source Location required for driver filtering
       sourceLocation: ['', Validators.required]
     });
   }

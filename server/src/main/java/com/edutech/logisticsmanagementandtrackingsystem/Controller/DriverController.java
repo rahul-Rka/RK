@@ -41,14 +41,14 @@ public class DriverController {
         return ResponseEntity.ok(cargoService.updateStatusForDriver(cargoId, newStatus, username));
     }
 
-    // ✅ NEW: toggle availability
+    //  NEW: toggle availability
     @PostMapping("/availability/toggle")
     public ResponseEntity<Driver> toggleAvailability(Authentication authentication) {
         String username = authentication.getName();
         return ResponseEntity.ok(driverService.toggleAvailability(username));
     }
 
-    // ✅ NEW: update location (optional)
+    //  NEW: update location (optional)
     @PutMapping("/location")
     public ResponseEntity<Driver> updateLocation(
             Authentication authentication,
@@ -58,4 +58,10 @@ public class DriverController {
         String location = body.getOrDefault("currentLocation", "");
         return ResponseEntity.ok(driverService.updateLocation(username, location));
     }
+
+    @GetMapping("/profile")
+public ResponseEntity<Driver> getProfile(Authentication authentication) {
+    String username = authentication.getName();
+    return ResponseEntity.ok(driverService.getDriverProfile(username));
+}
 }

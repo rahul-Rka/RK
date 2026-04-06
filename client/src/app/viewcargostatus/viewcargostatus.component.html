@@ -42,7 +42,7 @@
           </div>
         </div>
 
-        <!-- ✅ Glow Stepper -->
+        <!--  Glow Stepper -->
         <div class="tracker">
           <div class="node" [class.active]="getStep(c) >= 1">
             <div class="icon">🧾</div>
@@ -76,7 +76,7 @@
           <span *ngIf="getStep(c) === 4">✅ Delivered</span>
         </div>
 
-        <!-- ✅ Feedback UI (DELIVERED only) -->
+        <!--  Feedback UI (DELIVERED only) -->
         <div class="feedback-box" *ngIf="(c.status || '').toUpperCase() === 'DELIVERED'">
 
           <!-- Already submitted -->

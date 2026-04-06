@@ -25,7 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserService userService;
 
-    // ✅ Use existing PasswordEncoder bean from your config (Configurations.class)
+    //  Use existing PasswordEncoder bean from your config (Configurations.class)
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -37,10 +37,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
             .authorizeRequests()
 
-            // ✅ allow preflight requests (CORS)
+            //  allow preflight requests (CORS)
             .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-            // ✅ public endpoints (NO token required)
+            //  public endpoints (NO token required)
             .antMatchers(
                     "/api/register",
                     "/api/login",
@@ -50,14 +50,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     "/verifyotp"
             ).permitAll()
 
-            // ✅ everything else requires JWT token
+            //  everything else requires JWT token
             .anyRequest().authenticated()
 
             .and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        // ✅ JWT filter
+        // JWT filter
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 

@@ -112,7 +112,7 @@
 </small>
 </div>
  
-      <!-- ✅ ADDED: DRIVER AGE (show only for DRIVER) -->
+      <!-- ADDED: DRIVER AGE (show only for DRIVER) -->
 <div class="mb-3" *ngIf="itemForm.get('role')?.value === 'DRIVER'">
 <label class="form-label">Driver Age</label>
 <input
@@ -148,7 +148,7 @@
 </small>
 </div>
  
-      <!-- ✅ ADDED: DRIVER LICENSE (only when DRIVER & age >= 18) -->
+      <!-- ADDED: DRIVER LICENSE (only when DRIVER & age >= 18) -->
 <div class="mb-3"
 
         *ngIf="itemForm.get('role')?.value === 'DRIVER' && (itemForm.get('age')?.value >= 18)">

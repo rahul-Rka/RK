@@ -43,12 +43,12 @@ public class BusinessService {
         return cargoRepository.save(cargo);
     }
 
-    /* ✅ GET ALL CARGOS */
+    /*  GET ALL CARGOS */
     public List<Cargo> getAllCargo() {
         return cargoRepository.findAll();
     }
 
-    /* ✅ EXISTING METHOD */
+    /* EXISTING METHOD */
     public Cargo assignCargoToDriver(Long cargoId, Long driverId) {
 
         Cargo cargo = cargoRepository.findById(cargoId).orElse(null);

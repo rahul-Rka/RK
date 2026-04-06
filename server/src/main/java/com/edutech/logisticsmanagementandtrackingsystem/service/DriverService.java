@@ -49,4 +49,7 @@ public class DriverService {
         driver.setCurrentLocation(location);
         return driverRepository.save(driver);
     }
+    public Driver getDriverProfile(String username) {
+    return driverRepository.findByName(username);
+}
 }

@@ -1,11 +1,10 @@
 <div class="container mt-4 dashboard">
-
+ 
   <!-- ================= BUSINESS DASHBOARD ================= -->
   <ng-container *ngIf="role === 'BUSINESS'">
     <h2 class="page-title mb-4">Business Dashboard</h2>
-
+ 
     <div class="row g-3 mb-4 stats-row">
-
       <div class="col-md-4">
         <div class="stat-card">
           <div class="stat-top">
@@ -18,35 +17,31 @@
           <div class="stat-foot accent-line-blue"></div>
         </div>
       </div>
-
+ 
       <div class="col-md-4">
-        <!-- ⭐ CLICK HERE TO SHOW DRIVER DETAILS -->
         <div class="stat-card" style="cursor:pointer;" (click)="toggleDriverInfo()">
           <div class="stat-top">
             <div>
               <div class="stat-label">Total Drivers</div>
               <div class="stat-value">{{ drivers.length }}</div>
-
-              <!-- ⭐ SHOW ONLY WHEN CLICKED -->
+ 
               <div *ngIf="showDriverDetails">
-
                 <div class="mt-2" *ngFor="let d of drivers; let i = index">
                   <div class="text-muted small">
-                    Driver {{ i + 1 }} 
+                    Driver {{ i + 1 }}
                     (availability - {{ d.available ? 'available' : 'busy' }},
                     location - {{ d.currentLocation || 'Not updated' }})
                   </div>
                 </div>
-
               </div>
-
+ 
             </div>
             <div class="stat-icon accent-green">🚚</div>
           </div>
           <div class="stat-foot accent-line-green"></div>
         </div>
       </div>
-
+ 
       <div class="col-md-4">
         <div class="stat-card">
           <div class="stat-top">
@@ -63,9 +58,9 @@
         </div>
       </div>
     </div>
-
+ 
     <h4 class="section-title">All Cargo</h4>
-
+ 
     <div class="table-card">
       <table class="table app-table">
         <thead>
@@ -76,7 +71,7 @@
             <th style="width: 160px;">Status</th>
           </tr>
         </thead>
-
+ 
         <tbody>
           <tr *ngFor="let c of cargos">
             <td>{{ c.id }}</td>
@@ -84,44 +79,42 @@
             <td>{{ c.size }}</td>
             <td><span class="status-pill">{{ c.status }}</span></td>
           </tr>
-
+ 
           <tr *ngIf="cargos.length === 0">
             <td colspan="4" class="empty-state">No cargo found</td>
           </tr>
         </tbody>
       </table>
     </div>
-
   </ng-container>
-
-
-  <!-- ================= DRIVER DASHBOARD (unchanged) ================= -->
+ 
+  <!-- ================= DRIVER DASHBOARD ================= -->
   <ng-container *ngIf="role === 'DRIVER'">
     <h2 class="page-title mb-4">Driver Dashboard</h2>
-
+ 
     <div class="card p-3 mb-3 shadow-sm">
       <div class="d-flex align-items-center justify-content-between">
         <div>
           <div class="fw-bold">Availability</div>
           <div class="text-muted small">
-            {{ driverAvailable === null ? 'Click toggle to load status' : (driverAvailable ? 'Available' : 'Busy') }}
+            {{ driverAvailable === null ? 'Loading...' : (driverAvailable ? 'Available' : 'Busy') }}
           </div>
         </div>
-
+ 
         <button class="btn btn-sm btn-dark" (click)="toggleAvailability()">
           Toggle
         </button>
       </div>
-
+ 
       <div class="mt-3">
-        <label class="form-label">Current Location (optional)</label>
+        <label class="form-label">Current Location</label>
         <div class="input-group">
-          <input class="form-control" [(ngModel)]="locationInput" placeholder="e.g., Chennai">
+          <input class="form-control" [(ngModel)]="locationInput" placeholder="e.g. Chennai">
           <button class="btn btn-outline-secondary" (click)="saveLocation()">Save</button>
         </div>
       </div>
     </div>
-
+ 
     <div class="table-card">
       <table class="table app-table">
         <thead>
@@ -133,7 +126,7 @@
             <th style="width: 170px;">Action</th>
           </tr>
         </thead>
-
+ 
         <tbody>
           <tr *ngFor="let c of assignedCargos">
             <td>{{ c.id }}</td>
@@ -141,12 +134,10 @@
             <td>{{ c.size }}</td>
             <td><span class="status-pill warn">{{ c.status }}</span></td>
             <td>
-              <button class="btn btn-sm btn-app" (click)="goToViewCargo()">
-                Update Status
-              </button>
+              <button class="btn btn-sm btn-app" (click)="goToViewCargo()">Update Status</button>
             </td>
           </tr>
-
+ 
           <tr *ngIf="assignedCargos.length === 0">
             <td colspan="5" class="empty-state">No assigned cargo</td>
           </tr>
@@ -154,20 +145,18 @@
       </table>
     </div>
   </ng-container>
-
-
-  <!-- ================= CUSTOMER DASHBOARD (unchanged) ================= -->
+ 
+  <!-- ================= CUSTOMER DASHBOARD ================= -->
   <ng-container *ngIf="role === 'CUSTOMER'">
     <h2 class="page-title mb-4">Customer Dashboard</h2>
-
+ 
     <div class="customer-card">
       <div class="customer-title">Your Cargo Status</div>
       <div class="customer-sub">View all cargos assigned to you.</div>
-
-      <button class="btn btn-app mt-3" (click)="goToViewCargo()">
-        View My Cargos
-      </button>
+ 
+      <button class="btn btn-app mt-3" (click)="goToViewCargo()">View My Cargos</button>
     </div>
   </ng-container>
-
+ 
 </div>
+ 

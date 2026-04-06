@@ -133,7 +133,7 @@ $black: #0f172a;
 
 .forgot-link { color: $red; font-weight: 800; font-size: 0.8rem; cursor: pointer; text-decoration: none; &:hover { text-decoration: underline; } }
 
-/* ✅ OTP MODAL FIXES */
+/* OTP MODAL FIXES */
 .master-overlay {
   position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px);
   display: flex; align-items: center; justify-content: center; z-index: 99999;

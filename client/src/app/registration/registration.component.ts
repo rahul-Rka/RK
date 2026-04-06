@@ -20,7 +20,7 @@ import { HttpService } from '../../services/http.service';
 
   templateUrl: './registration.component.html',
 
-  styleUrls:['./registration.component.scss']
+  styleUrls: ['./registration.component.scss']
 
 })
 
@@ -101,23 +101,23 @@ export class RegistrationComponent {
         Validators.required
 
       ],
- 
-      /* ✅ ADDED: Driver fields */
+
+      /* ADDED: Driver fields */
 
       age: [{ value: '', disabled: true }],
 
       licenseNumber: [{ value: '', disabled: true }]
 
     });
- 
-    /* ✅ ADDED: Role based enable/disable + validators */
+
+    /* ADDED: Role based enable/disable + validators */
 
     this.itemForm.get('role')?.valueChanges.subscribe((role) => {
 
       const ageCtrl = this.itemForm.get('age');
 
       const licenseCtrl = this.itemForm.get('licenseNumber');
- 
+
       if (role === 'DRIVER') {
 
         // Enable age and validate
@@ -135,7 +135,7 @@ export class RegistrationComponent {
         ]);
 
         ageCtrl?.updateValueAndValidity({ emitEvent: false });
- 
+
         // License only when age >=18, so disable now
 
         licenseCtrl?.reset('', { emitEvent: false });
@@ -145,7 +145,7 @@ export class RegistrationComponent {
         licenseCtrl?.clearValidators();
 
         licenseCtrl?.updateValueAndValidity({ emitEvent: false });
- 
+
       } else {
 
         // Non-driver => disable and clear
@@ -157,7 +157,7 @@ export class RegistrationComponent {
         ageCtrl?.clearValidators();
 
         ageCtrl?.updateValueAndValidity({ emitEvent: false });
- 
+
         licenseCtrl?.reset('', { emitEvent: false });
 
         licenseCtrl?.disable({ emitEvent: false });
@@ -169,19 +169,19 @@ export class RegistrationComponent {
       }
 
     });
- 
-    /* ✅ ADDED: When age >= 18 => enable license & validate pattern */
+
+    /*  When age >= 18 => enable license & validate pattern */
 
     this.itemForm.get('age')?.valueChanges.subscribe((ageVal) => {
 
       const role = this.itemForm.get('role')?.value;
 
       const licenseCtrl = this.itemForm.get('licenseNumber');
- 
+
       if (role !== 'DRIVER') return;
- 
+
       const age = Number(ageVal);
- 
+
       if (!isNaN(age) && age >= 18) {
 
         licenseCtrl?.enable({ emitEvent: false });
@@ -189,8 +189,8 @@ export class RegistrationComponent {
         licenseCtrl?.setValidators([
 
           Validators.required,
- 
-          // ✅ Format: SS-RRRRYYYYNNNNNNN
+
+          // Format: SS-RRRRYYYYNNNNNNN
 
           // SS = 2 letters, RRRR = 4 digits, YYYY = 4 digits, NNNNNNN = 7 digits
 
@@ -266,4 +266,3 @@ export class RegistrationComponent {
 
 }
 
- 

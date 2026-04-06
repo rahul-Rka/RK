@@ -1,7 +1,4 @@
-/* =========================================================
-   Dark Glossy Dashboard UI (Teal / Light Blue Accent)
-   File: dashboard.component.scss
-   ========================================================= */
+
 .navbar {
   background: rgba(10, 14, 26, 0.75) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.10);
@@ -113,7 +110,7 @@
   letter-spacing: 1.5px;
   text-transform: uppercase;
   
-  /* ✅ CHANGE THIS LINE: Set to bright white or light slate */
+  /* CHANGE THIS LINE: Set to bright white or light slate */
   color: #f9f3f3 !important; 
   opacity: 0.7; /* This gives it a professional 'muted' look without losing visibility */
 }
@@ -136,7 +133,7 @@
   font-weight: 900;
   line-height: 1;
 
-  /* ✅ CHANGE THIS LINE: Ensure the numbers are pure white */
+  /* CHANGE THIS LINE: Ensure the numbers are pure white */
   color: #721818 !important; 
   text-shadow: 0 0 15px #ece6e6fa; /* Adds a very subtle 'expensive' glow */
 }

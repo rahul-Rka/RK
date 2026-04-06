@@ -26,7 +26,7 @@ public class RegisterAndLoginController {
     private PendingLoginStore pendingLoginStore;
 
     /* =========================
-       ✅ REGISTER
+        REGISTER
        ========================= */
     @PostMapping("/register")
     public User register(@RequestBody User user) {
