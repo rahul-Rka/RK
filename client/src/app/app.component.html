@@ -9,13 +9,11 @@
       <div class="container h-100">
         <div class="row align-items-center h-100">
           <div class="col-lg-7 text-white animate-slide-left">
-            <div class="kicker">INDIA'S #1 INTEGRATED NETWORK</div>
-            <h1 class="display-3 fw-900 mt-2">Moving Business <br><span class="text-danger">Beyond Borders.</span></h1>
-            <p class="lead opacity-75 mt-3 mb-4">Real-time AI tracking, verified fleet management, and 99.5% population coverage.</p>
+            <div class="kicker-badge">INDIA'S #1 INTEGRATED NETWORK</div>
+            <h1 class="display-3 fw-950 mt-2">Moving Business <br><span class="text-danger-glow">Beyond Borders.</span></h1>
+            <p class="lead opacity-75 mt-3 mb-4">Fleet management with 99.5% population coverage.</p>
             <div class="d-flex gap-3">
-              <button class="btn-partner-glass" (click)="goLogin()">
-  PARTNER LOGIN
-</button>
+              <button class="btn-partner-glass" (click)="goLogin()">PARTNER LOGIN</button>
             </div>
           </div>
 
@@ -23,7 +21,7 @@
             <div class="tracking-console shadow-lg">
               <div class="console-nav"><button class="active">Track order</button></div>
               <div class="console-content">
-                <h4 class="fw-900 mb-3">Track <span class="text-danger">Live</span></h4>
+                <h4 class="fw-950 mb-3">Track <span class="text-danger">Live</span></h4>
                 <div class="custom-input-group">
                   <input type="text" [(ngModel)]="trackingId" placeholder="Enter Cargo ID (e.g., 2)" class="track-field">
                   <button class="track-btn" (click)="trackShipment()">TRACK</button>
@@ -38,10 +36,10 @@
   </section>
 
   <section #statsSection class="stats-bar bg-white border-bottom">
-    <div class="container">
-      <div class="row py-5 text-center">
+    <div class="container py-5">
+      <div class="row text-center">
         <div class="col-md-3 border-end" *ngFor="let s of stats">
-          <h2 class="fw-900 text-danger mb-0">{{ s.current | number:'1.0-1' }}{{ s.suffix }}</h2>
+          <h2 class="fw-950 text-danger-glow mb-0">{{ s.current | number:'1.0-1' }}{{ s.suffix }}</h2>
           <p class="small text-muted fw-bold text-uppercase">{{ s.label }}</p>
         </div>
       </div>
@@ -50,14 +48,14 @@
 
   <section class="solutions-grid py-5 bg-light">
     <div class="container py-5">
-      <h2 class="fw-900 mb-5"><span class="red-marker"></span> Our Suite of <span class="text-danger">Solutions</span></h2>
+      <h2 class="fw-950 mb-5"><span class="red-marker"></span> Our Suite of <span class="text-danger">Solutions</span></h2>
       <div class="row g-4">
         <div class="col-md-4" *ngFor="let card of [
           {t:'Express Parcel', d:'Fastest delivery network for e-commerce and retail brands.', i:'bi-lightning-charge-fill'},
           {t:'Personal Courier', d:'Door-to-door shipping for all your personal package needs.', i:'bi-box-seam-fill'},
           {t:'B2B Enterprise', d:'End-to-end supply chain for heavy manufacturing and trade.', i:'bi-truck'}
         ]">
-          <div class="solution-card blink-card p-4 h-100">
+          <div class="solution-card blink-hover p-4 h-100">
             <div class="icon-circle mb-3"><i class="bi" [ngClass]="card.i"></i></div>
             <h5 class="fw-800">{{card.t}}</h5>
             <p class="text-muted small">{{card.d}}</p>
@@ -70,33 +68,34 @@
 
   <footer class="bg-dark text-white py-5">
     <div class="container text-center">
-      <h3 class="fw-900">Logi<span class="text-danger">Track</span></h3>
+      <h3 class="fw-950">Logi<span class="text-danger">Track</span></h3>
       <p class="opacity-50 small">Built with Angular + Spring Boot • © {{currentYear}} All Rights Reserved.</p>
     </div>
   </footer>
+
 </div>
 
 <nav *ngIf="!isHomePage" class="navbar-elite shadow-sm">
   <div class="container d-flex justify-content-between align-items-center h-100">
-<a class="navbar-brand-custom" 
-   routerLink="/" 
-   style="text-decoration: none; 
-          font-weight: 950; 
-          letter-spacing: -1.5px; 
-          font-size: 1.6rem; 
-          color: #0f172a; 
-          text-transform: uppercase; 
-          display: flex; 
-          align-items: center;">
-  
-  LOGI<span style="color: #E11D48; 
-                   margin-left: 1px; 
-                   text-shadow: 0 0 8px rgba(225, 29, 72, 0.2);">TRACK</span>
-</a>
+    <a class="navbar-brand-custom" (click)="goHome()" style="cursor:pointer; text-decoration: none;">
+      <span class="logo-logi">LOGI</span><span class="logo-track">TRACK</span>
+    </a>
     <div class="d-flex gap-4 align-items-center">
       <ng-container *ngIf="!IsLoggin">
-        <a class="nav-link-elite" (click)="goLogin()">LOGIN</a>
-        <button class="btn-delhi-sm" (click)="goRegister()">SIGN UP</button>
+        <div class="d-flex gap-4 align-items-center">
+  <a class="nav-link-elite" (click)="goLogin()">LOGIN</a>
+</div>
+        <button class="btn-signup-red" (click)="goRegister()">SIGN UP</button>
+      </ng-container>
+      <ng-container *ngIf="IsLoggin">
+        <a class="nav-link-elite" (click)="goDashboard()">DASHBOARD</a>
+        <div class="d-flex gap-3 align-items-center">
+  <span class="role-badge-cyber">{{ roleName }}</span>
+
+  <button class="btn-logout-neon" (click)="logout()">
+    <i class="bi bi-power"></i> LOGOUT
+  </button>
+</div>
       </ng-container>
     </div>
   </div>

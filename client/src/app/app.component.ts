@@ -14,7 +14,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   trackingError = '';
   currentYear = new Date().getFullYear();
 
-  // Stats Logic
+  // Animated Stats Data
   stats = [
     { label: 'Parcels Moved', target: 4, current: 0, suffix: ' Bn+' },
     { label: 'Active Clients', target: 48, current: 0, suffix: 'K+' },
@@ -35,48 +35,53 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   private updateHomeFlag(url: string) {
-    this.isHomePage = (url === '/' || url === '' || url.includes('index.html'));
+    const path = url.split('?')[0];
+    this.isHomePage = (path === '/' || path === '' || path.includes('index.html'));
   }
 
-  // Number Counting Logic
+  // --- STATS COUNTING LOGIC ---
   ngAfterViewInit() {
     this.observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
         this.startCounting();
-        this.observer.disconnect(); // Only animate once
+        this.observer.disconnect();
       }
     }, { threshold: 0.5 });
 
-    if (this.statsSection) {
-      this.observer.observe(this.statsSection.nativeElement);
-    }
+    if (this.statsSection) this.observer.observe(this.statsSection.nativeElement);
   }
 
   startCounting() {
     this.stats.forEach(stat => {
       let start = 0;
       const end = stat.target;
-      const duration = 2000; // 2 seconds
-      const increment = end / (duration / 16); // 60fps
-
+      const duration = 2000;
+      const increment = end / (duration / 16);
       const timer = setInterval(() => {
         start += increment;
-        if (start >= end) {
-          stat.current = end;
-          clearInterval(timer);
-        } else {
-          stat.current = start;
-        }
+        if (start >= end) { stat.current = end; clearInterval(timer); } 
+        else { stat.current = start; }
       }, 16);
     });
   }
 
-  // Auth & Nav Methods
+  // --- NAVIGATION & AUTH ---
   get IsLoggin() { return this.authService.getLoginStatus; }
   get roleName() { return this.authService.getRole; }
+
   goLogin() { this.router.navigateByUrl('/login'); }
   goRegister() { this.router.navigateByUrl('/registration'); }
   goDashboard() { this.router.navigateByUrl('/dashboard'); }
-  logout() { this.authService.logout(); this.router.navigateByUrl('/login'); }
-  trackShipment() { /* your existing track logic */ }
+  goHome() { this.router.navigateByUrl('/'); }
+  
+  logout() { 
+    this.authService.logout(); 
+    this.router.navigateByUrl('/login'); 
+  }
+
+  trackShipment() {
+    if (!this.trackingId.trim()) { this.trackingError = 'ID required'; return; }
+    if (!this.IsLoggin) { this.goLogin(); } 
+    else { this.router.navigate(['/view-cargo-status'], { queryParams: { id: this.trackingId } }); }
+  }
 }

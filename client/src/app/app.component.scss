@@ -1,99 +1,172 @@
 $red: #E11D48;
 $black: #0f172a;
 
-/* ... keep your existing video and hero css ... */
-
+/* --- HERO & VIDEO FIX --- */
 .delhivery-viewport { position: relative; overflow-x: hidden; }
-.hero-container { position: relative; height: 100vh; width: 100%; overflow: hidden; }
-.bg-video { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); min-width: 100%; min-height: 100%; object-fit: cover; z-index: -1; }
-.hero-overlay { background: linear-gradient(90deg, rgba(15, 23, 42, 0.9) 35%, rgba(15, 23, 42, 0.2) 100%); height: 100%; width: 100%; }
-.fw-900 { font-weight: 950; }
+.hero-container { position: relative; height: 100vh; background: #030712; }
+.bg-video { 
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+  min-width: 100%; min-height: 100%; object-fit: cover; z-index: 1; 
+}
+.hero-overlay { 
+  position: relative; z-index: 2; height: 100%; 
+  background: linear-gradient(90deg, rgba(3, 7, 18, 0.9) 30%, rgba(3, 7, 18, 0.4) 100%); 
+}
 
-/* 2. TRACKING CONSOLE */
-.tracking-console {
-  background: #fff; border-radius: 6px; overflow: hidden; border-bottom: 6px solid $red;
-  .console-nav { display: flex; background: #f8fafc; button { flex: 1; border: none; padding: 18px; font-weight: 800; color: #94a3b8; } }
+.fw-950 { font-weight: 950; }
+.text-danger-glow { color: $red; text-shadow: 0 0 15px rgba(225, 29, 72, 0.4); }
+.kicker-badge { background: $red; color: #fff; padding: 6px 14px; font-weight: 800; font-size: 0.7rem; border-radius: 4px; display: inline-block; letter-spacing: 1.5px; }
+
+/* --- GLASSY BUTTON --- */
+.btn-partner-glass {
+  background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff; padding: 15px 35px; border-radius: 6px; font-weight: 900; cursor: pointer; transition: 0.4s;
+  &:hover { background: rgba(225, 29, 72, 0.15); border-color: $red; box-shadow: 0 0 25px $red; transform: translateY(-3px); }
+}
+
+/* --- TRACKING CONSOLE --- */
+.tracking-console { 
+  background: #fff; border-radius: 12px; overflow: hidden; border-bottom: 8px solid $red; 
+  .console-nav { background: #f1f5f9; button { flex: 1; border: none; padding: 20px; font-weight: 900; color: #94a3b8; } }
   .console-content { padding: 45px; }
 }
 
 .custom-input-group {
-  display: flex; border: 2px solid #e2e8f0; border-radius: 6px;
+  display: flex; border: 2px solid #e2e8f0; border-radius: 8px; overflow: hidden;
   .track-field { flex: 1; border: none; padding: 15px; font-weight: 700; outline: none; }
-  .track-btn { background: #000; color: #fff; border: none; padding: 0 30px; font-weight: 900; &:hover { background: $red; } }
+  .track-btn { background: #000; color: #fff; border: none; padding: 0 25px; font-weight: 950; &:hover { background: $red; } }
 }
 
-/* 3. SOLUTION CARDS WITH BLINK EFFECT */
+/* --- SOLUTION CARDS + BLINK EFFECT --- */
 .solution-card {
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  position: relative;
-  overflow: hidden;
-
-  .icon-circle { 
-    width: 50px; height: 50px; background: rgba(225, 29, 72, 0.1); 
-    color: $red; display: grid; place-items: center; border-radius: 50%; 
-  }
-
-  /* ✅ THE BLINK EFFECT ON HOVER */
-  &:hover {
+  background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; transition: 0.4s;
+  .icon-circle { width: 50px; height: 50px; background: rgba(225, 29, 72, 0.1); color: $red; display: grid; place-items: center; border-radius: 50%; font-size: 1.2rem; }
+  
+  &.blink-hover:hover {
     transform: translateY(-10px);
     border-color: $red;
-    animation: blink-border 0.8s infinite alternate; /* The Blink Effect */
-    box-shadow: 0 10px 30px rgba(225, 29, 72, 0.2);
-    
-    .icon-circle {
-      background: $red;
-      color: #fff;
-      transform: rotateY(360deg);
-      transition: 0.6s;
-    }
+    animation: neon-blink 1s infinite alternate; /* ✅ BLINK EFFECT */
+    .icon-circle { background: $red; color: #fff; }
   }
 }
 
-/* KEYFRAMES FOR BLINKING */
-@keyframes blink-border {
-  0% { border-color: #e2e8f0; box-shadow: 0 0 0 transparent; }
-  100% { border-color: $red; box-shadow: 0 0 15px rgba(225, 29, 72, 0.5); }
+$red: #E11D48;
+
+/* ✅ REMOVE BLUE UNDERLINE & STYLE LOGIN */
+.nav-link-elite {
+  color: #ffffff !important;      /* Pure white text */
+  text-decoration: none !important; /* Removes the blue underline */
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: 0.3s;
+  background: none;
+  border: none;
+
+  &:hover {
+    color: $red !important;
+    text-shadow: 0 0 10px rgba(225, 29, 72, 0.5);
+  }
 }
 
-.red-marker { display: inline-block; width: 6px; height: 35px; background: $red; vertical-align: middle; margin-right: 15px; }
-.btn-partner-glass {
-  /* The Glass Foundation */
-  background: rgba(255, 255, 255, 0.05); 
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+/* ✅ REMOVE GRAY BOX & STYLE SIGN UP */
+.btn-signup-red {
+  background: $red;               /* Delhivery Red */
+  color: #fff;
+  border: none;                   /* Removes the default button border */
+  padding: 8px 22px;
+  border-radius: 4px;
+  font-weight: 800;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  transition: 0.3s;
+  box-shadow: 0 4px 15px rgba(225, 29, 72, 0.2);
+
+  &:hover {
+    background: #ff4d6d;          /* Brighter red on hover */
+    box-shadow: 0 0 20px rgba(225, 29, 72, 0.6);
+    transform: translateY(-2px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* --- Variables --- */
+$red: #E11D48;
+
+/* ✅ ELITE ROLE BADGE (BUSINESS) */
+.role-badge-cyber {
+  background: rgba(225, 29, 72, 0.1); /* Subtle red tint */
+  color: #E11D48;
+  border: 1px solid rgba(225, 29, 72, 0.4);
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  box-shadow: 0 0 10px rgba(225, 29, 72, 0.1);
+  display: inline-block;
+}
+
+/* ✅ NEON LOGOUT BUTTON */
+.btn-logout-neon {
+  /* Remove browser defaults */
+  background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.2);
   
   /* Typography */
   color: #ffffff;
-  padding: 12px 30px;
-  font-size: 0.85rem;
+  padding: 8px 18px;
+  border-radius: 6px;
   font-weight: 800;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  
-  /* Shape & Interaction */
-  border-radius: 4px; 
+  font-size: 0.75rem;
+  letter-spacing: 1px;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  
+  /* Layout & Interaction */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* The "Glow" on Hover */
+  i { font-size: 0.9rem; } /* Icon size */
+
   &:hover {
-    background: rgba(225, 29, 72, 0.15); // Hint of Delhivery Red
-    border-color: #E11D48;
-    color: #ffffff;
-    transform: translateY(-3px);
-    box-shadow: 0 0 25px rgba(225, 29, 72, 0.6); // Neon red glow
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+    background: $red;
+    border-color: $red;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(225, 29, 72, 0.6); /* Red neon glow */
+    
+    i { 
+      /* Make the power icon glow slightly more */
+      filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.8));
+    }
   }
 
-  /* Active Press Effect */
   &:active {
-    transform: translateY(-1px);
-    box-shadow: 0 0 10px rgba(225, 29, 72, 0.4);
+    transform: translateY(0);
   }
 }
-/* ... keep your existing navbar and animation css ... */
+
+@keyframes neon-blink {
+  from { box-shadow: 0 0 5px rgba(225, 29, 72, 0.1); }
+  to { box-shadow: 0 0 20px rgba(225, 29, 72, 0.6); }
+}
+
+.red-marker { display: inline-block; width: 6px; height: 35px; background: $red; vertical-align: middle; margin-right: 15px; }
+
+/* --- NAVBAR STYLES --- */
+.navbar-elite { height: 75px; background: rgba(10, 14, 26, 0.9); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); position: sticky; top: 0; z-index: 9999; }
+.logo-logi { font-weight: 950; color: #fff; letter-spacing: -2px; font-size: 1.7rem; }
+.logo-track { font-weight: 950; color: $red; letter-spacing: -2px; font-size: 1.7rem; text-shadow: 0 0 10px rgba(225, 29, 72, 0.4); }
+
+/* --- ANIMATIONS --- */
+.animate-slide-left { animation: slideInLeft 0.8s ease-out; }
+.animate-slide-right { animation: slideInRight 0.8s ease-out; }
+@keyframes slideInLeft { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes slideInRight { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }

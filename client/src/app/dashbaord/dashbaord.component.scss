@@ -105,18 +105,40 @@
   gap: 12px;
 }
 
+/* --- Update these in dashboard.component.scss --- */
+
 .stat-label {
-  font-size: 0.92rem;
+  font-size: 0.75rem;
   font-weight: 800;
-  color: rgba(229, 231, 235, 0.78);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  
+  /* ✅ CHANGE THIS LINE: Set to bright white or light slate */
+  color: #f9f3f3 !important; 
+  opacity: 0.7; /* This gives it a professional 'muted' look without losing visibility */
 }
+.text-muted.small {
+    color: #f1ecec !important; /* Pure off-white for maximum visibility */
+    opacity: 1 !important;     /* Forces it to stay bright */
+    font-weight: 600;          /* Adds a bit of weight so it's sharp */
+    display: block;
+    margin-top: 4px;
+    
+    /* Adds a subtle contrast against the dark card */
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
 
 .stat-value {
-  margin-top: 6px;
-  font-size: 2.05rem;
-  font-weight: 950;
-  line-height: 1.1;
-  color: #eafcff;
+  margin-top: 5px;
+  font-size: 2.8rem;
+  font-weight: 900;
+  line-height: 1;
+
+  /* ✅ CHANGE THIS LINE: Ensure the numbers are pure white */
+  color: #721818 !important; 
+  text-shadow: 0 0 15px #ece6e6fa; /* Adds a very subtle 'expensive' glow */
 }
 
 /* Icon badge */
